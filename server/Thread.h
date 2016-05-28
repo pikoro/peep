@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_THREAD_H__
 #define __PEEP_THREAD_H__
@@ -24,16 +24,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 typedef void *(*ThreadFunc) (void *data);
 
 /* Begin a new Thread */
-int StartThread (ThreadFunc func, void *data, pthread_t * handle);
+int StartThread(ThreadFunc func, void *data, pthread_t * handle);
 
 /* Functions to lock and unlock threads */
-void ThreadLock (pthread_mutex_t * l);
-void ThreadUnlock (pthread_mutex_t * l);
+void ThreadLock(pthread_mutex_t * l);
+void ThreadUnlock(pthread_mutex_t * l);
 
 /* Make a thread sleep */
-void ThreadSleep (unsigned long n);
+void ThreadSleep(unsigned long n);
 
 /* Kill a thread */
-void ThreadKill (pthread_t thread);
+void ThreadKill(pthread_t thread);
 
 #endif __PEEP_THREAD_H__

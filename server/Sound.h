@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_SOUND_H__
 #define __PEEP_SOUND_H__
@@ -61,34 +61,32 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #endif
 
 /* Contains information about the capabilities of the sound card */
-struct sound_card_info
-{
-	unsigned int min_rate;				/* Minimum sampling rate supported */
-	unsigned int max_rate;				/* Maximum rate supported by the card */
-	unsigned int max_channels;		/* Maximum number of voices on the soundcard */
-	unsigned int buffer_size;			/* Size of the playback buffer */
+struct sound_card_info {
+    unsigned int min_rate; /* Minimum sampling rate supported */
+    unsigned int max_rate; /* Maximum rate supported by the card */
+    unsigned int max_channels; /* Maximum number of voices on the soundcard */
+    unsigned int buffer_size; /* Size of the playback buffer */
 };
 
 /* Describes the current status of the sound card */
-struct sound_status
-{
-	unsigned int actual_rate;			/* Real playback rate - Hardware limits */
-	int free_byte_count;					/* Cound of bytes that could be written
+struct sound_status {
+    unsigned int actual_rate; /* Real playback rate - Hardware limits */
+    int free_byte_count; /* Cound of bytes that could be written
 																 * Without blocking in the queue */
-	int bytes_in_queue;						/* The number of bytes waititng to be played
+    int bytes_in_queue; /* The number of bytes waititng to be played
 																 * By the sound device */
-	struct timeval future_play_time;	/* Estimated time when the sample will play */
-	struct timeval start_time;		/* Time when playing of the sample started */
+    struct timeval future_play_time; /* Estimated time when the sample will play */
+    struct timeval start_time; /* Time when playing of the sample started */
 };
 
 /* Function Declarations */
-void *InitSoundCard (void *card, int device, int mode);
-int SetSoundFormat (void *handle, unsigned int format_type,
-												unsigned int sample_rate, unsigned int channels,
-												unsigned int port);
-struct sound_card_info *GetSoundCardInfo (void *handle);
-struct sound_status *GetSoundStatus (void *handle);
-ssize_t PlaySoundChunk (void *handle, char *buffer, unsigned long size);
-void CloseSoundDevice (void *handle);
+void *InitSoundCard(void *card, int device, int mode);
+int SetSoundFormat(void *handle, unsigned int format_type,
+        unsigned int sample_rate, unsigned int channels,
+        unsigned int port);
+struct sound_card_info *GetSoundCardInfo(void *handle);
+struct sound_status *GetSoundStatus(void *handle);
+ssize_t PlaySoundChunk(void *handle, char *buffer, unsigned long size);
+void CloseSoundDevice(void *handle);
 
 #endif __PEEP_SOUND_H__

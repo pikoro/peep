@@ -14,7 +14,7 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_SERVER_H__
 #define __PEEP_SERVER_H__
@@ -45,10 +45,9 @@
  * information associated with the broadcast should be considered
  * obsolete 
  */
-struct lease
-{
-	unsigned char min;
-	unsigned char sec;
+struct lease {
+    unsigned char min;
+    unsigned char sec;
 };
 
 /* We need the definition of an event to declare this packet
@@ -56,29 +55,28 @@ struct lease
 #include "Engine.h"
 
 /* Protocol for internet transmissions */
-typedef struct
-{
-	unsigned char majorver;				/* major protocol version */
-	unsigned char minorver;				/* minor protocol version */
-	unsigned char type;						/* type of packet */
-	unsigned char reserved;				/* reserved for future use */
-	union
-	{
-		struct
-		{
-			struct lease lease;
-			char infostring[PROT_STRLEN];
-		}
-		bc_server;									/* For server broadcasts */
-		struct
-		{
-			struct lease lease;
-		}
-		still_alive;								/* For renewing leases */
-		Event event;								/* Client event */
-		char infostring[PROT_STRLEN];	/* class string from client bc's */
-	}
-	msg;
+typedef struct {
+    unsigned char majorver; /* major protocol version */
+    unsigned char minorver; /* minor protocol version */
+    unsigned char type; /* type of packet */
+    unsigned char reserved; /* reserved for future use */
+
+    union {
+
+        struct {
+            struct lease lease;
+            char infostring[PROT_STRLEN];
+        }
+        bc_server; /* For server broadcasts */
+
+        struct {
+            struct lease lease;
+        }
+        still_alive; /* For renewing leases */
+        Event event; /* Client event */
+        char infostring[PROT_STRLEN]; /* class string from client bc's */
+    }
+    msg;
 }
 Packet;
 
@@ -92,12 +90,11 @@ Packet;
 #include <netinet/in.h>
 
 /* The entry in the linked list database of active clients */
-struct hostlist
-{
-	struct in_addr host;					/* The ip address of the active host */
-	unsigned int port;						/* The port to address the host with */
-	struct timeval expired;				/* The time remaining at which this has expired */
-	struct hostlist *nextent;			/* The next entry in the list */
+struct hostlist {
+    struct in_addr host; /* The ip address of the active host */
+    unsigned int port; /* The port to address the host with */
+    struct timeval expired; /* The time remaining at which this has expired */
+    struct hostlist *nextent; /* The next entry in the list */
 };
 
 #define SERVER_SUCCESS 1
@@ -105,49 +102,49 @@ struct hostlist
 
 /* Initializes the server data structure and returns true if successful,
  * false otherwise */
-int ServerInit (unsigned int port);
+int ServerInit(unsigned int port);
 
 /* Adds a broadcast zone with address 'zone' and port 'port' into the
  * broadcast list
  */
-int ServerAddBroadcastZone (char *zone, int port);
+int ServerAddBroadcastZone(char *zone, int port);
 
 /* Adds a class identifier into the server's class identifier
  * string */
-int ServerAddIdentifier (char *class);
+int ServerAddIdentifier(char *class);
 
 /* Sets and gets the server port */
-void ServerSetPort (int p);
-int ServerGetPort (void);
+void ServerSetPort(int p);
+int ServerGetPort(void);
 
 /* Starts the actual server process */
-void ServerStart (void);
+void ServerStart(void);
 
 /* Breaks up a client broadcast string and extracts the info
  * into the appropriate datastructures */
-void ServerProcessClientBC (char *infostring, struct sockaddr_in *from);
+void ServerProcessClientBC(char *infostring, struct sockaddr_in *from);
 
 /* Updates the lease time for a client within the server host list */
-void ServerUpdateClient (struct sockaddr_in *from);
+void ServerUpdateClient(struct sockaddr_in *from);
 
 /* Adds a client and creates a new lease time within the server's
  * autodiscovery and leasing host list */
-int ServerAddClient (struct in_addr newhost, unsigned int hostport);
+int ServerAddClient(struct in_addr newhost, unsigned int hostport);
 
 /* Function to remove expired hosts from the list. Should only occur
  * when a warning alarm has gone off */
-void ServerPurgeHostList (void);
+void ServerPurgeHostList(void);
 
 /* Lets all the clients know we're still alive so our lease doesn't expire */
-void ServerSendStillAlive (void);
+void ServerSendStillAlive(void);
 
 /* Handles an alarm signal, which allows an extra thread to run
  * concurrently and clean up the server host list at given
  * intervals */
-void ServerHandleAlarm ();
+void ServerHandleAlarm();
 
 /* Clean up the server host list data structure and shutdown the
  * networking sockets */
-void ServerShutdown (void);
+void ServerShutdown(void);
 
 #endif __PEEP_SERVER_H__

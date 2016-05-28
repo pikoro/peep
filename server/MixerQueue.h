@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_MIXERQUEUE_H__
 #define __PEEP_MIXERQUEUE_H__
@@ -23,13 +23,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #include "Engine.h"
 
 /* Priority Queue Functions */
-void HeapInit (int s);
-void Swap (int i, int j);
-void MixerEnqueue (Event * new_event);
-Event *MixerDequeue (void);
-int BubbleUp (int pos);
-int BubbleDown (int pos);
-int MixerQueueEmpty (void);
-int MixerQueueFull (void);
+void HeapInit(int s);
+void Swap(int i, int j);
+void MixerEnqueue(Event * new_event);
+Event *MixerDequeue(void);
+int BubbleUp(int pos);
+int BubbleDown(int pos);
+int MixerQueueEmpty(void);
+int MixerQueueFull(void);
 
 #endif __PEEP_MIXERQUEUE_H__

@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_ENGINE_H__
 #define __PEEP_ENGINE_H__
@@ -22,43 +22,43 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 /* Include time definitions so we can use the u_char and clock_t
  * definitions */
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
+#include <sys/time.h>
+#include <time.h>
 #else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
 #endif
 #include <unistd.h>
 
-typedef struct
-{
-	unsigned char type;						/* State or single event? */
-	unsigned char sound;					/* Sound to map to */
-	unsigned char location;				/* Stereo location in terms of left channel
+typedef struct {
+    unsigned char type; /* State or single event? */
+    unsigned char sound; /* Sound to map to */
+    unsigned char location; /* Stereo location in terms of left channel
 																 * Right channel is simple 255 - location */
-	unsigned char priority;				/* Priority of the event */
-	unsigned char volume;					/* Playback volume  - Have to divide by 255 */
-	unsigned char dither;					/* Adjustable parameter for sound dithering.
+    unsigned char priority; /* Priority of the event */
+    unsigned char volume; /* Playback volume  - Have to divide by 255 */
+    unsigned char dither; /* Adjustable parameter for sound dithering.
 																 * 2 meanings -
 																 * 1: Applies to states, sets the fade-in time
 																 * when mixing between state sounds
 																 * 2: Applies delay to handle logs which update
 																 * in large spurts at set intervals */
-	struct timeval mix_in_time;		/* Time at which an event (if it) was enqueued */
+    struct timeval mix_in_time; /* Time at which an event (if it) was enqueued */
 }
 Event;
 
 /* For convenience to differentiate events and states */
-enum Event_Type
-{ EVENT, STATE };
+enum Event_Type {
+    EVENT, STATE
+};
 
 /* Performs the necesary functions to set up the sound engine
  * environment. Accepts the card number, determines the number
  * of voices and initializes the array Handles for each voices */
-void EngineInit (int card, char *device);
+void EngineInit(int card, char *device);
 
 #define ENGINE_SUCCESS 1
 #define ENGINE_NOT_YET_ALLOC -1
@@ -96,35 +96,35 @@ int EngineCreateEventSoundEntry(int index, int no_events);
  * that this fuction references the event number (index)
  * and its sub-event sound (event_no) */
 int EngineAssignEventSoundEntry(int index, int event_no,
-																short *sound, unsigned int len);
+        short *sound, unsigned int len);
 
 /* Initializes the scheduling data structures that are internal
  * to the sound engine algorithm */
-int EngineSchedulerInit (int index, double start, double minend,
-																long prior);
+int EngineSchedulerInit(int index, double start, double minend,
+        long prior);
 
 /* Returns the raw sound data associated with an event (index)
  * and it's sub-sound (event_no) */
-short *EngineGetEventSound (int index, int event_no);
+short *EngineGetEventSound(int index, int event_no);
 
 /* Returns the length of the sound data array referenced by
  * the event (index) and sub-sound (event_no) */
-unsigned int EngineGetEventSoundLength (int index, int event_no);
+unsigned int EngineGetEventSoundLength(int index, int event_no);
 
 /* This function embodies the sound engine's algorithm for
  * finding a mixer channel or enqueuing an event based on the
  * event's priority. It is called every time the server receives
  * an event, so that the event can be directed to its appropriate
  * place. */
-void EngineIO (Event * incoming_event);
+void EngineIO(Event * incoming_event);
 
 /* Preform the necessary cleanup upon shutdown */
-void EngineShutdown (void);
+void EngineShutdown(void);
 
 /* Define an expired queue time to be 5 seconds */
 #define QUEUE_EXPIRED      (5 * CLOCKS_PER_SEC)
 
 #define TP_IN_FP_SECS(x) \
-	( (double)x.tv_sec + ( (double)x.tv_usec * 0.000001) )
+        ( (double)x.tv_sec + ( (double)x.tv_usec * 0.000001) )
 
 #endif __PEEP_ENGINE_H__

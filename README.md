@@ -1,6 +1,12 @@
 Welcome to Peep (the network auralizer):
-A project developed at Tufts University and currently hosted at Sourceforge.
+A project originally developed at Tufts University and an old version is
+currently hosted at Sourceforge.
 http://www.sourceforge.net/projects/peep/
+
+I am attempting to revive this project and this fork is currently hosted
+at github and will be distributed on init (https://init.sh/)
+
+https://github.com/pikoro/peep
 
 ==========================================================================
 

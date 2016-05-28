@@ -14,41 +14,36 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #include "config.h"
 #include <stdio.h>
 #include "Thread.h"
 
-int StartThread (ThreadFunc func, void *data, pthread_t * handle)
-{
-	int rc;
+int StartThread(ThreadFunc func, void *data, pthread_t * handle) {
+    int rc;
 
-	pthread_attr_t attr;
+    pthread_attr_t attr;
 
-	rc = pthread_attr_init (&attr);
-	rc = pthread_create (handle, &attr, func, data);
-	pthread_attr_destroy (&attr);
+    rc = pthread_attr_init(&attr);
+    rc = pthread_create(handle, &attr, func, data);
+    pthread_attr_destroy(&attr);
 
-	return rc;
+    return rc;
 }
 
-void ThreadLock (pthread_mutex_t * l)
-{
-	pthread_mutex_lock (l);
+void ThreadLock(pthread_mutex_t * l) {
+    pthread_mutex_lock(l);
 }
 
-void ThreadUnlock (pthread_mutex_t * l)
-{
-	pthread_mutex_unlock (l);
+void ThreadUnlock(pthread_mutex_t * l) {
+    pthread_mutex_unlock(l);
 }
 
-void ThreadSleep (unsigned long n)
-{
-	usleep (n);
+void ThreadSleep(unsigned long n) {
+    usleep(n);
 }
 
-void ThreadKill (pthread_t thread)
-{
-	pthread_cancel (thread);
+void ThreadKill(pthread_t thread) {
+    pthread_cancel(thread);
 }

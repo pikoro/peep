@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_PARSER_H__
 #define __PEEP_PARSER_H__
@@ -27,24 +27,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * Based on voices will allow.
  * Returns True if successful or  logs an error message and returns False
  */
-int LoadConfig (char *config_path);
+int LoadConfig(char *config_path);
 
-int ParseClass (char *class, char *localhost, FILE * config);
-int ParseEvents (FILE * config);
-int ParseStates (FILE * config);
+int ParseClass(char *class, char *localhost, FILE * config);
+int ParseEvents(FILE * config);
+int ParseStates(FILE * config);
 
 /* A thread safe tokenizing function, whose functionality is a little
  * better than a strtok on isspace() */
-struct tok
-{
-	char *token;
-	char *remain_buf;
+struct tok {
+    char *token;
+    char *remain_buf;
 };
 
-void Tokenize (struct tok *buf);
+void Tokenize(struct tok *buf);
 
 /* Loading functions, which are necessary to the process of parsing */
-unsigned int GetFileSize (char *path);
-short *LoadSoundFile (unsigned int *array_size, char *path);
+unsigned int GetFileSize(char *path);
+short *LoadSoundFile(unsigned int *array_size, char *path);
 
 #endif __PEEP_PARSER_H__

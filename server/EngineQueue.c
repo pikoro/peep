@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #include "config.h"
 #include "EngineQueue.h"
@@ -24,28 +24,26 @@ static Queued_Event *Head = NULL;
 static Queued_Event *Tail = NULL;
 
 /* Add an event into the queue */
-void EngineEnqueue (Event d)
-{
-	Queued_Event *cur_pos = Head;
+void EngineEnqueue(Event d) {
+    Queued_Event *cur_pos = Head;
 
-	if (Head == NULL) {
-		Head = (Queued_Event *) malloc (sizeof (Queued_Event));
-		Head->Incoming_Event = d;
-		Head->next = Head->prev = NULL;
-		Tail = Head;
-	}
-	else {
+    if (Head == NULL) {
+        Head = (Queued_Event *) malloc(sizeof (Queued_Event));
+        Head->Incoming_Event = d;
+        Head->next = Head->prev = NULL;
+        Tail = Head;
+    } else {
 
-		/* Loop 'till we hit the end of the queue */
-		while (cur_pos->next != NULL)
-			cur_pos = cur_pos->next;
+        /* Loop 'till we hit the end of the queue */
+        while (cur_pos->next != NULL)
+            cur_pos = cur_pos->next;
 
-		cur_pos->next = (Queued_Event *) malloc (sizeof (Queued_Event));
-		cur_pos->next->Incoming_Event = d;
-		cur_pos->next->next = NULL;
-		cur_pos->next->prev = cur_pos;
-		Tail = cur_pos->next;
-	}
+        cur_pos->next = (Queued_Event *) malloc(sizeof (Queued_Event));
+        cur_pos->next->Incoming_Event = d;
+        cur_pos->next->next = NULL;
+        cur_pos->next->prev = cur_pos;
+        Tail = cur_pos->next;
+    }
 }
 
 /* Future work for dithering of events:
@@ -63,27 +61,24 @@ void EngineEnqueue (Event d)
  */
 
 /* Get an event from the queue */
-Event EngineDequeue (void)
-{
-	Event temporary;
+Event EngineDequeue(void) {
+    Event temporary;
 
-	temporary = Tail->Incoming_Event;
+    temporary = Tail->Incoming_Event;
 
-	if (Tail->prev != NULL) {
-		Tail = Tail->prev;
-		free (Tail->next);
-		Tail->next = NULL;
-	}
-	else {
-		free (Tail);
-		Tail = Head = NULL;
-	}
+    if (Tail->prev != NULL) {
+        Tail = Tail->prev;
+        free(Tail->next);
+        Tail->next = NULL;
+    } else {
+        free(Tail);
+        Tail = Head = NULL;
+    }
 
-	return (temporary);
+    return (temporary);
 }
 
 /* Returns true if the engine queue is empty, else false */
-int EngineQueueEmpty (void)
-{
-	return (Head == NULL);
+int EngineQueueEmpty(void) {
+    return (Head == NULL);
 }

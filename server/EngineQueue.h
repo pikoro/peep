@@ -14,7 +14,7 @@ modify it under the terms listed in the file COPYING.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-*/
+ */
 
 #ifndef __PEEP_ENGINEQUEUE_H__
 #define __PEEP_ENGINEQUEUE_H__
@@ -26,17 +26,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *  As events are read in via udp, they are enqueued into this datastructure
  *  until the engine thread discovers the awaiting events and processes them
  */
-struct Queued_Event
-{
-	Event Incoming_Event;
-	struct Queued_Event *next;
-	struct Queued_Event *prev;
+struct Queued_Event {
+    Event Incoming_Event;
+    struct Queued_Event *next;
+    struct Queued_Event *prev;
 };
 
 typedef struct Queued_Event Queued_Event;
 
-void EngineEnqueue (Event d);
-Event EngineDequeue (void);
-int EngineQueueEmpty (void);
+void EngineEnqueue(Event d);
+Event EngineDequeue(void);
+int EngineQueueEmpty(void);
 
 #endif __PEEP_ENGINEQUEUE_H__
