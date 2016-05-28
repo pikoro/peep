@@ -1,0 +1,131 @@
+* From 0.4.1 to 0.4.2
+  * Scheduler code has been integrated into the client
+    library code base
+  * Serveral bugfixes including bugs #440590 and #439881.
+  * The pinger module has been added into the distro,
+    although its not yet functional.
+
+* From 0.4.0 to 0.4.1
+  * Clients have been re-architected to fit into the CPAN
+    scheme and also now available over CPAN. Just run
+    a: perl -MCPAN -e'install Net::Peep'.
+  * Consequently, the Peep libraries have been moved
+    to Net::Peep
+  * All extern declarations have been moved behind
+    accessor functions in the server code. The header
+    files now include all documentation for the functions
+    within those files.
+  * Bugfixes for the clients - check their respective
+    changelogs via perldoc.
+
+* From 0.4.0-pre1 to 0.4.0
+  * Sounds are now categorized! Please download the new
+    sound package, with more detailed info and organization
+    of the sound repository.
+  * automake has been updated for installation of the new
+    sound repository, as well as for creating distributions
+    via a "make dist".
+  * Major update to the Peep general documentation to reflect
+    all the changes in the code base.
+  * The new client documentation has been created.
+  * The client code has been updated and the utils code base
+    has been replaced.
+  * peep.conf is now generated during a configure, and
+    will work nicely on any linux system. With other systems,
+    we currently have problems determining the broadcast
+    address.
+
+* From 0.3.8 to 0.4.0-pre1
+  * Playback feature has now been added. Users can create
+    recordings of past events and play back events between
+    certain times
+  * Auto-discovery bug has been fixed (Bug #231359)
+  * Major code reorganization - files are now completely
+    modularized and the code has been nicely cleaned up.
+  * Debugging routines have now been formalized and moved
+    into their own modules and debugging levels have also
+    been defined.
+  * The pre-alpha client code has been made available
+    for exploration in the code base. It will eventually
+    replace the utility directory.
+
+* From 0.3.7 to 0.3.8
+  * Utilities now read command-line options from peep.conf
+  * Fixed Uptime and LogParser help messages
+
+* From 0.3.6 to 0.3.7
+  * The server and LogParser and Uptime are now daemons. They
+    also write their pids out into a file 
+    (default: /var/run/<name>.pid)
+  * The utilties now use #!/usr/bin/perl.
+  * Changing LogParser's output a little.
+
+* From 0.3.5 to 0.3.6
+  * Changed LogParser so that users can now choose between
+    autodiscovery and direct connctions.
+  * Added some minor error checking for system calls. Should
+    avoid segfaulting on blank indentifiers
+  * Tweaked the code for File::Tail so that events are picked
+    up faster. Users can tweak the parameters of the constants
+    in terms of performance vs. CPU usage.
+
+* From 0.3.4 to 0.3.5
+  * Changed LogParser to use File::Tail instead of LogTail.pm.
+    This fixes its CPU usage
+
+* From 0.3.3 to 0.3.4
+  * Edited the code to confer with a naming scheme,
+    as well as proper spacing. It looks much better now.
+    The naming scheme is:
+      Globals: Starts with caps, delimited with '_'
+               Ex: Snds_Per_State or Snds
+      locals:  All lowercase, delimeted with '_'
+               Ex: var_foo or var
+      functions: Starts with caps, words combined
+               Ex: EnginePoll or Enqueue
+  * Fixed some bugs with LogParser
+  * Added a volume cap for dynamic volumes to event and
+    states so that total volumes are in ratios (7.0 events
+    to 0.3 states)
+  * Fixed an autodiscovery bug whereby clients wouldn't
+    bind to servers when they were started after the servers
+
+* From 0.3.2 to 0.3.3
+  * Changed mutex locking problem that would wedge the
+    server with large array of events
+  * Added KeyTest. Maps 24 events and 11 states to the
+    keyboard as well all control parameters. Good for
+    testing/experimenting. Needs event->name mapping
+    though
+  * Fixed shutdown segfault.
+  * Adding better debugging messages
+
+For 0.3.1: (We're dropping this alpha label)
+
+  - Revamped configuration file. Contains configuration for 
+    utilities as well as the Peep server.
+  - Autodiscovery was added. Clients and servers now bind to 
+    each other upon startup.
+  - Dynamic volume mixing. Volumes of sounds are set dynamically 
+    based on the volume of what's currently playing so as to 
+    avoid clipping.
+
+For 0.2.1alpha:
+
+  - Added support for tcp_wrappers. To compile with
+    tcp wrappers, simpley do a:
+      configure --with-libwrap[=PATH] 
+    where the path to the library is optional. 
+
+Some of the more interesting things the 0.2.0 alpha 
+release supports are:
+
+- Stereo location for both event and state sounds
+- Ability to assign up to 99 variations on a given event sound
+  and have one of those varations chosen randomly when the
+  event occurs
+- A dither parameter that tells the engine when to start doing
+  a linear fade on the current state sound while fading the
+  next state sound in.
+- An event priority
+

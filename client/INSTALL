@@ -1,0 +1,20 @@
+To install the Peep client libraries,
+
+  cd Net/Peep
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+It's easier than falling off a log.
+
+If typing 5 commands is too much effort or if you just want the latest
+stable release off the CPAN, you can 
+
+  perl -MCPAN -e "install Net::Peep"
+
+Contact Collin Starkweather at collin.starkweather@colorado.edu if you
+have any problems.  Keep in mind that I'm a graduate student, and
+though I'll make every effort to answer promptly, sometimes I get a
+bit behind in my e-mail :-)
+

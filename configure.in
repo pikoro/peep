@@ -1,0 +1,196 @@
+#
+# configure.in
+#
+# Author: Michael Gilfix <mgilfix@eecs.tufts.edu>
+#
+# Copyright (c) 2000 Michael Gilfix <mgilfix@eecs.tufts.edu>
+#                    All rights reserved
+#
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(server/Engine.c)
+AM_CONFIG_HEADER(config.h)
+
+AC_PREREQ(2.10)
+
+PACKAGE=peepd
+
+MAJOR_VERSION=0
+MINOR_VERSION=4
+PATCH_VERSION=2
+
+VERSION=${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}
+
+AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
+
+dnl Define the default location of peep.conf relative to the
+dnl installation prefix
+if test $prefix = NONE; then
+	SYSCONFDIR="/etc/peep.conf"
+else
+	SYSCONFDIR="$prefix/etc/peep.conf"
+fi
+AC_DEFINE_UNQUOTED(DEFAULT_CONFIG_PATH, "$SYSCONFDIR")
+
+dnl Evaluate options
+AC_ARG_ENABLE(debug, 
+[  --enable-debug=[level] These are currently defined to be:
+
+       0 - Lowest: Prints default output and general debugging info.
+       1 - Lower:  Lowest debugging and server info.
+       2 - Medium: Lower debugging and sound engine and playback info.
+       3 - Higher: Medium debugging and mixer information.
+       4 - Highest: Higher debugging and queuing info.
+       5 - Highest debugging level with Assertions (Whoa! This WILL slow down execution)
+
+],
+[case "${enableval}" in
+  0)
+  AC_DEFINE(DEBUG_LEVEL, DBG_LOWEST)
+  ;;
+  1)
+  AC_DEFINE(DEBUG_LEVEL, DBG_LOWER)
+  ;;
+  2)
+  AC_DEFINE(DEBUG_LEVEL, DBG_MEDIUM)
+  ;;
+  3)
+  AC_DEFINE(DEBUG_LEVEL, DBG_HIGHER)
+  ;;
+  4)
+  AC_DEFINE(DEBUG_LEVEL, DBG_HIGHEST)
+  ;;
+  5)
+  AC_DEFINE(DEBUG_LEVEL, DBG_ALL_W_ASSERT)
+  ;;
+esac]
+ )
+
+dnl Let's figure out what kind of mixing to use
+AC_ARG_WITH(dynamic-volume,
+[  --with-dynamic-volume  (Volume of sounds change with context -- Default) ],
+AC_DEFINE(DYNAMIC_VOLUME)
+)
+
+static_volume=no
+AC_ARG_WITH(static-volume,
+[  --with-static-volume   (Volume of sounds are set at a constant to avoid clipping) ],
+[ AC_DEFINE(STATIC_VOLUME)
+  static_volume=yes ]
+)
+
+dnl Now let's put our default if we didn't use static
+if test "$static_volume" = "no"; then
+  AC_DEFINE(DYNAMIC_VOLUME)
+fi
+
+AC_MSG_CHECKING(whether to compile with libwrap support...)
+AC_ARG_WITH(libwrap,
+[  --with-libwrap[=PATH]  (Compile in libwrap (tcp_wrappers) support) ],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  yes)
+    AC_MSG_RESULT(yes)
+    AC_CHECK_LIB(wrap, request_init, [
+        AC_DEFINE(LIBWRAP)
+        LIBS="$LIBS -lwrap"
+        AC_DEFINE(HAVE_LIBWRAP) ])
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(LIBWRAP)
+    OLDLIBS="$LIBS"
+    if test -d "$withval"; then
+        LIBS="$LIBS -L$withval -lwrap"
+    else
+        LIBS="$LIBS $withval"
+    fi
+    AC_TRY_LINK([ int allow_severity; int deny_severity; ],
+                [ hosts_access(); ],
+                [],
+                [ AC_MSG_ERROR(Could not find the $withval library.  You must first install tcp_wrappers.) 
+                  LIBS="$OLDLIBS" ]) 
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
+dnl Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+
+dnl Check for these general libraries.
+AC_CHECK_LIB(m, log)
+AC_CHECK_LIB(pthread, pthread_create)
+
+dnl Checking whether we have the ALSA sound drivers installed or whether
+dnl we want to use the device drivers. Default to device driver
+
+AC_ARG_WITH(device-driver,
+[  --with-device-driver   (Compile for /dev/audio) ],
+AC_DEFINE(__USING_DEVICE_DRIVER__)
+)
+
+alsa_driver=no
+AC_ARG_WITH(alsa-driver,
+[  --with-alsa-driver     (Compile using ALSA libraries v 0.4.x) ],
+[ AC_CHECK_LIB(asound, snd_pcm_open, 
+             [ AC_DEFINE(__USING_ALSA_DRIVER__)
+               LIBS="$LIBS -lasound" ],
+             AC_DEFINE(__USING_DEVICE_DRIVER__))
+  alsa_driver=yes ]
+)
+
+#Now let's put our default if we didn't use the alsa driver
+if test "$alsa_driver" = "no"; then
+  AC_DEFINE(__USING_DEVICE_DRIVER__)
+  AC_MSG_RESULT(compiling with /dev/audio support...)
+else
+  AC_MSG_RESULT(compiling with ALSA support...)
+fi
+
+
+dnl Check for the socket libraries - Do we need to include them
+dnl explicitly
+AC_CHECK_LIB(socket, socket)
+AC_CHECK_LIB(nsl, gethostbyname) 
+
+dnl Handle some host specific stuff
+AC_CANONICAL_HOST
+case "$host" in
+  *-*-linux*)
+    AC_DEFINE(__LINUX__)
+  ;;
+  *-*-solaris*)
+    AC_DEFINE(__SOLARIS__)
+  ;;
+  *)
+  AC_WARN(***)
+  AC_WARN(Your system isn't directly supported. Attempting to compile with Linux options...)
+  AC_WARN(***)
+    AC_DEFINE(__LINUX__)
+  ;;
+esac
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
+AC_HEADER_TIME
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(gethostname gettimeofday select socket)
+
+AC_OUTPUT(Makefile
+server/Makefile)
+
+################################################################
+# Post configuration actions
+. gen_conf

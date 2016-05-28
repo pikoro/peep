@@ -1,0 +1,34 @@
+The wishlist:
+
+============
+* This list will eventually be moved into the sourceforge feature
+* tracker
+============
+
+Stuff for more immediate attention:
+* Fix this request: if we choose to run the client with
+  -noautodiscovery, why not take as default the values
+  found in the config? (for the server name and the server port) ?
+* Fix problem where server can only pick itself out of the config
+  if the hostname has a certain format. (sorta fixed via peep.conf
+  generation and uname -n?).
+
+Stuff to be done/looked at eventually:
+
+* Fix ALSA compilations with latest version of ALSA
+	* This is on hold until ALSA gets their act together. They are
+	  currently working on v0.5.0 which is all over the place and want
+	  me to wait until 0.6.x to do any updates. The current code works
+	  with 0.4.x.
+* Integrate Esound so Peep server can share sound device with other apps.
+	* Maybe someone would like to take a look into this one?
+* Integrate peepd experimental GUI.
+
+Some cool audio stuff to investigate:
+
+* Different sounds for states like (stream for low load, river for 
+  higher load, ocean for highest load)
+* implement dither (time dynamics) 
+* upon state change, take a parameter that describes fade from old to new. 
+  (new volume, position, source, etc.) 
+* last idea (probably last feature of peepd) is pitch bending (interpolative sampling) 

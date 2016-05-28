@@ -1,0 +1,48 @@
+#!/bin/sh
+##################################################################
+# Section for generating an "out-of-the-box" Peep configuration
+# file from a template.
+#
+# This is my initial pass at this and works great on a linux
+# machine. It'll need to be expanded for portability at some
+# point and we'll probably want to move it to its own script.
+
+ERR=0
+if test ! -f server/peep.conf; then
+	echo "Attempting to generate a localized peep.conf from template..."
+
+	# Grab hostname
+	UNAME_NODENAME=`uname -n 2>/dev/null` || UNAME_NODENAME=hostname_unknown
+
+	# Figure out the broadcast address
+	if test -f /sbin/ifconfig; then
+		IFCONFIG=/sbin/ifconfig
+	elif test -f /usr/sbin/ifconfig; then
+		IFCONFIG=/usr/sbin/ifconfig
+	fi
+
+	# First check if we can run ifconfig without args
+	if `$IFCONFIG > /dev/null 2>&1`; then
+		# For some reason, it's necessary for me to put 2 '[['s and ']]'s here for
+		# autoconf to translate the configure properly. 
+		BCAST_ADDR=`$IFCONFIG | awk '/Bcast:/ { split($3, a, /:/); print a[2] }'`
+	else
+		# For now, just return unknown. We'll work on this
+		echo "Couldn't determine local broadcast address..."
+		echo "Setting address: broadcast_unknown"
+		ERR=1
+		BCAST_ADDR=broadcast_unknown
+	fi
+
+	# Do a 'quotemeta' on the prefix so we can sub with it
+	PREFIX=`echo $prefix/share | sed -e 's/\//\\\\\//g'`
+
+	# Perform substitutions
+	sed -e "s/__HOST/$UNAME_NODENAME/; s/__BROADCAST/$BCAST_ADDR/; s/__PREFIX/$PREFIX/" \
+	< server/peep.conf.template > server/peep.conf
+
+	if test ! $ERR -eq 0; then
+		echo "server/peep.conf was only partially generated..."
+		echo "Please review manually."
+	fi
+fi
