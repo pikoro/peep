@@ -1,0 +1,88 @@
+#! /bin/sh
+#
+# peep          Start the sound server
+#
+# Author:       Devin, <XXXXXXXXXXXXXXXXXXX>
+#
+# chkconfig: 345 50 50
+# description: Kickass Sound Server and network / log monitor
+# processname: peepd
+# pidfile: /var/run/peepd.pid
+# config: /etc/sysconfig/network
+# config: /etc/peep.conf
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get config.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+#if [ ${NETWORKING} = "no" ]
+#then
+#	exit 0
+#fi
+
+[ -f /usr/bin/peepd ] || exit 0
+
+RETVAL=0
+
+# See how we were called.
+case "$1" in
+  start)
+	echo -n "Starting PEEP Server: "
+	daemon peepd -l /var/log/peepd -i /var/lock/subsys/peepd
+	echo
+
+	echo -n "Starting System Monitor"
+	daemon /usr/bin/sysmonitor
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/sysmonitor
+
+	echo -n "Starting Log Watcher"
+	daemon /usr/bin/logparser
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/logparser
+	;;
+  stop)
+	echo -n "Stopping peep service: "
+	killproc peepd
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/peepd
+
+	echo -n "stopping System Monitor"
+	killproc sysmonitor
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/sysmonitor
+
+	echo -n "Stopping Log Watcher"
+	killproc logparser
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/logparser
+	;;
+  status)
+	status peepd
+	RETVAL=$?
+	;;
+  restart)
+  	$0 stop
+	$0 start
+	RETVAL=$?
+	;;
+  reload)
+  	$0 stop
+	$0 start
+	RETVAL=$?
+	;;
+  *)
+	echo "Usage: peep {start|stop|status|restart|reload}"
+	exit 1
+esac
+
+exit $REVAL

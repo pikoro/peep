@@ -1,0 +1,177 @@
+<HTML>
+<HEAD>
+<TITLE>Net::Peep::Peck</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Peck</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#export">EXPORT</A></LI>
+	<LI><A HREF="#methods">METHODS</A></LI>
+	<LI><A HREF="#commandline arguments">COMMAND-LINE ARGUMENTS</A></LI>
+	<LI><A HREF="#examples">EXAMPLES</A></LI>
+	<LI><A HREF="#alternatives">ALTERNATIVES</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#change log">CHANGE LOG</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::Peep::Peck - Perl extension for generating ad-hoc sounds using the
+Peep sound engine.</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use Net::Peep::Peck;
+  my $peck = new Net::Peep::Peck;</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>Net::Peep::Peck provides utility methods for the peck utility, which
+allows users to generate ad-hoc sounds.</P>
+<P>
+<HR>
+<H1><A NAME="export">EXPORT</A></H1>
+<P>None by default.</P>
+<P>
+<HR>
+<H1><A NAME="methods">METHODS</A></H1>
+<PRE>
+  new() - The constructor</PRE>
+<PRE>
+  peck() - Sends an event to the server and port specified by the
+  command-line flags (you guessed it!) --server and --port.  For other
+  related command-line flags, see the COMMAND-LINE ARGUMENTS section.</PRE>
+<P>
+<HR>
+<H1><A NAME="commandline arguments">COMMAND-LINE ARGUMENTS</A></H1>
+<P>Command-line arguments processed by Net::Peep::Peck include:</P>
+<PRE>
+    --type      The type of sound to produce (event=0, state=1)
+    --sound     The name or number of the sound to produce
+    --location  The location (left or right speaker) of the sound
+    --volume    The volume of the sound
+    --priority  A priority for producing the sound
+    --dither    The dither
+    --port      The port to which the event will be directed
+    --server    The server to which the event will be directed
+    --debug     The debugging level (Def:  0)
+    --logfile   The file to send log output (Def:  STDOUT)
+    --help      Prints whatever PODs are found in the calling 
+                application</PRE>
+<P>
+<HR>
+<H1><A NAME="examples">EXAMPLES</A></H1>
+<PRE>
+  peck --server=localhost --port=2001 --sound=auth-fail</PRE>
+<PRE>
+  peck --server=localhost --port=2001 --type=0 --sound=1</PRE>
+<PRE>
+  peck --server=localhost --port=2001 --sound=0 --debug=9</PRE>
+<P>
+<HR>
+<H1><A NAME="alternatives">ALTERNATIVES</A></H1>
+<P>To play individual sounds (for example, if you are browsing through
+the <CODE>sounds</CODE> directory), <CODE>bplay</CODE> makes for a nice sound browser.</P>
+<P>Last I checked, you can find <CODE>bplay</CODE> at</P>
+<PRE>
+  <A HREF="http://www.amberdata.demon.co.uk/bplay">http://www.amberdata.demon.co.uk/bplay</A></PRE>
+<P>The following arguments tend to work well for me:</P>
+<PRE>
+  bplay -S -s 44100 -b 16 soundfile</PRE>
+<P>where soundfile is whatever sound you want to listen to
+(<CODE>hermit-thrush-01.01</CODE> is one of my personal favorites).</P>
+<P>Note that you should not have the Peep daemon running when you use
+<CODE>bplay</CODE> and vice-versa.</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix &lt;<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>&gt; Copyright (C) 2001</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), Net::Peep::BC, peck.</P>
+<P>
+<HR>
+<H1><A NAME="change log">CHANGE LOG</A></H1>
+<P>$Log: Net::Peep::Peck.html,v $
+<P>Revision 1.1  2001/04/23 10:19:14  starky
+<P>Commit in preparation for release 0.4.1.
+<P>
+<P>o Altered package namespace of Peep clients to Net::Peep
+<P>  at the suggestion of a CPAN administrator.
+<P>o Changed Peep::Client::Log to Net::Peep::Client::Logparser
+<P>  and Peep::Client::System to Net::Peep::Client::Sysmonitor
+<P>  for clarity.
+<P>o Made adjustments to documentation.
+<P>o Fixed miscellaneous bugs.
+<P>
+Revision 1.8  2001/04/17 06:46:21  starky
+Hopefully the last commit before submission of the Peep client library
+to the CPAN.  Among the changes:</P>
+<P>o The clients have been modified somewhat to more elagantly
+  clean up pidfiles in response to sigint and sigterm signals.
+o Minor changes have been made to the documentation.
+o The Peep::Client module searches through a host of directories in
+  order to find peep.conf if it is not immediately found in /etc or
+  provided on the command line.
+o The make test script conf.t was modified to provide output during
+  the testing process.
+o Changes files and test.pl files were added to prevent specious
+  complaints during the make process.</P>
+<P>Revision 1.7  2001/04/07 08:23:35  starky
+Added documentation describing how to listen to individual sounds with
+bplay for those who may find that interesting.</P>
+<P>Revision 1.6  2001/04/04 05:40:00  starky
+Made a more intelligent option parser, allowing a user to more easily
+override the default options.  Also moved all error messages that arise
+from client options (e.g., using noautodiscovery without specifying
+a port and server) from the parseopts method to being the responsibility
+of each individual client.</P>
+<P>Also made some minor and transparent changes, such as returning a true
+value on success for many of the methods which have no explicit return
+value.</P>
+<P>Revision 1.5  2001/03/31 07:51:35  mgilfix</P>
+<PRE>
+  Last major commit before the 0.4.0 release. All of the newly rewritten
+clients and libraries are now working and are nicely formatted. The server
+installation has been changed a bit so now peep.conf is generated from
+the template file during a configure - which brings us closer to having
+a work-out-of-the-box system.</PRE>
+<P>Revision 1.1  2001/03/31 02:17:00  mgilfix
+Made the final adjustments to for the 0.4.0 release so everything
+now works. Lots of changes here: autodiscovery works in every
+situation now (client up, server starts &amp; vice-versa), clients
+now shutdown elegantly with a SIGTERM or SIGINT and remove their
+pidfiles upon exit, broadcast and server definitions in the class
+definitions is now parsed correctly, the client libraries now
+parse the events so they can translate from names to internal
+numbers. There's probably some other changes in there but many
+were made :) Also reformatted all of the code, so it uses
+consistent indentation.</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Peck</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

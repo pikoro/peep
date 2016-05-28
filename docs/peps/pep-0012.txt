@@ -1,0 +1,360 @@
+PEP: 0012
+Title: Client Proposals for 0.5.0
+Version: $Revision; 1.1$
+Author: collin.starkweather@colorado.edu (Collin Starkweather)
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Abstract:
+
+   There are two primary components of this proposal:  
+
+     * Host-specific client configuration
+     * New clients
+
+   The new clients, as well as the old, would either benefit from or
+   necessitate from host-specific client configurations.  The two are
+   so closely allied that they both deserve treatment in the same PEP.
+
+   Please read this PEP in connection with The Sound Repository and
+   General Peep Configuration PEP (pep-0011.txt), as the two are
+   closely tied insofar as the both of them will radically change the
+   way Peep is configured and information is accessed.
+
+   Host-specific Client Configuration
+   ----------------------------------
+
+   Peep's existing configuration specification, as given by the existing
+   peep.conf file, does not allow for easy differentiation of client
+   functionality by host.
+
+   For example, on an application server, the logparser client may want
+   to parse Apache logs for Apache error messages. On a backend server,
+   the logparser client may want to parse Oracle logs for ORA-XXXXX
+   errors.
+
+   Likewise, future clients such as the proposed procmonitor client may
+   want to look for different processes on different machines.
+
+   Furthermore, with the proliferation of clients and with the ability to
+   effectively monitor a larger number of servers with the use of themes,
+   a single configuration file could become overly large and ungainly.
+
+   One additional requirement that I would like to add due to personal
+   preferences and my industry experience performing system
+   administration tasks and setting up monitoring systems is that the
+   core Peep configuration files remain flat text files. While XML is
+   excellent for organizing sounds and creating themes, ultimately, it is
+   easier to administer to a collection of remote machines by being able
+   to edit text files with vi.
+
+   As a side note, the means have already been established through the
+   client module library to easily parse and error-check configuration
+   files. With this foundation, it would be extremely easy to create a
+   simple tool for administrators to error-check any changes they make
+   to Peep configuration files, which would minimize user error
+   through manipulation of flat text files.
+
+   New Clients
+   -----------
+
+   Several clients have either been proposed or prototyped. They include:
+
+    * pinger
+    * webmonitor
+    * procmonitor
+
+   Another client which was discussed, but which may or may not have been
+   implemented, is a stock ticker. If it has been either prototyped or
+   implemented, it would make a nice addition to the list.
+
+Specification
+
+Host-specific Client Configuration
+
+   Borrowing some ideas from the way Big Brother organizes its
+   configuration, I propose dividing the Peep configuration file into
+   the following files:
+
+     File      Description
+     =================================================================
+     peep.conf Server configuration and global configuration options
+     logtab    Configuration file for the logparser client
+     systab    Configuration file for the sysmonitor client
+     proctab   Configuration file for the procmonitor client
+     webtab    Configuration file for the webmonitor web monitoring
+               client
+     pingtab   Configuration file for the pinger connection monitoring
+               client
+
+   Each client configuration file will be divided into sections based on
+   a host descriptor.
+
+   host descriptors are associated either with hostnames or IP addresses.
+   Host names or IP addresses may use wildcards to represent a number of
+   hosts; e.g.,
+
+      host moon.foo.org
+      host *.foo.org
+      host app?.foo.org
+      host 127.138.73.71
+      host 127.138.73.*
+
+   Examples are given below that should make the idea clear.
+
+   peep.conf
+   ---------
+
+   peep.conf will contain
+
+    1. Class definitions in the same format as the current class
+       definitions:
+
+            class home
+              broadcast 192.168.1.255:2000
+              server morgenstern:2001
+            end class home
+
+    2. Definitions of XML documents from which information regarding
+       such things as events and sounds can be taken:
+
+            configuration
+#             Peep will automatically parse the events defined in 
+#             the events.xml file that comes with the distribution.
+#             However, Joe User can also define his own events
+              events /home/joe/myevents.xml
+#             The same goes for states ...
+              states /home/joe/mystates.xml
+#             ... and themes.
+              states /home/joe/mytheme.xml
+            end configuration
+
+       
+
+    3. In addition to the themes provided in the default installation
+       and any user-defined themes, events can be associated with
+       sounds manually in peep.conf.
+
+       Event definitions are similar to the existing event
+       definitions; however, given that the theming will associate
+       sounds and sets of sounds with descriptors, there will simply
+       be 2 entries in the event definition: The name of the event and
+       the descriptor:
+
+            inc-mail     whistles
+            login        sighs
+      
+    4. In addition to the themes provided in the default installation
+       and any user-defined themes, states can be associated with
+       sounds manually in peep.conf.
+
+       State definitions are similar to the existing state
+       definitions.  Likewise, the state definitions will substitute
+       sound (or sounds) descriptors for the file names:
+
+            loadavg           waters   8                 0.7
+            users             rains    1                 1.5
+
+    4. Any global or server configuration settings, such as defaults or
+       sound mixing parameters.
+
+   logtab
+   ------
+
+   The logtab file will be similar to the existing client logparser
+   section in the current incarnation of peep.conf.
+
+   However, each client configuration will be enclosed in a host section
+   which defines the host to which the client configuration applies.
+
+   Events are defined in peep.conf. Their descriptors are tied to
+   other information in logtab.
+
+   Perhaps an example will best describe the concept:
+
+      host app?.foo.org
+        class home
+        port 2000
+        theme "Application Server Theme"
+      end host
+
+      host 128.138.173.*
+        class home
+        port 2000
+        default
+          events  BUL
+          logfile /var/log/messages
+        end default
+        events
+          login    L
+          badsu    B
+          su       U
+        end events
+      end host
+
+   Note that the first set of hosts merely specifies a theme, which
+   incorporates all of the information necessary for the client, whereas
+   the second set of hosts defines the client functionality in the
+   traditional manner.
+
+   systab
+   ------
+
+   As with logtab, the systab file will be similar to the existing client
+   sysmonitor section in the current incarnation of peep.conf and each
+   client configuration will be enclosed in a host section.
+
+   States are defined in peep.conf. Their descriptors are tied to other
+   information in systab.
+
+   Again, perhaps an example will best describe the concept:
+
+      host app?.foo.org
+        class home
+        port 1999
+        theme "Application Server Theme"
+      end host
+      
+      host 128.138.173.*
+        class home
+        port 1999
+        states
+          sleep      60         # Number of seconds to sleep
+          loadsound  loadavg    # The sound to use when playing a load sound
+          userssound users      # The sound to use for number of users
+          maxload    2.5        # The initial value to consider maximum load
+          maxusers   200        # The initial value to consider a lot of users
+          loadloc    128        # Stereo location for load sounds
+          usersloc   128        # Stereo location for user sounds
+        end states
+      end host
+
+   proctab
+   -------
+
+   Needless to say at this point, each client configuration will be
+   enclosed in a host section.
+
+   Again, perhaps an example will best describe the concept:
+
+      host app?.foo.org
+        class home
+        port 1999
+        theme "Application Server Theme"
+      end host
+      
+      host 128.138.173.*
+        class home
+        port 1999
+        processes
+          sshd           >=1   # 1 or more ssh daemons are required
+          httpd          4<=35 # Between 4 and 35 httpd (Apache) processes
+          oraclePROD1    >=4   # 4 or more Oracle processes for the PROD1 schema
+          ora_smon_PROD1 1     # Exactly 1 Oracle SMON process
+          ora_pmon_PROD1 1     # Exactly 1 Oracle process
+          ora_lgwr_PROD1 1     # Exactly 1 Oracle process
+          mysqld         4<=70 # Between 4 and 70 MySQL processes
+          /usr/sbin/cron 1     # Exactly 1 cron daemon
+        end processes
+      end host
+
+   webtab
+   ------
+
+   Typically, the webmonitor would be a client running on the same
+   machine as the server.
+
+   Again, each client configuration will be enclosed in a host section.
+
+   Again, perhaps an example will best describe the concept:
+
+      host peep.foo.org
+        class home
+        port 1999
+        theme "Peep Server Theme"
+      end host
+      
+      host failover.foo.org
+        class home
+        port 1999
+        http
+          http://www.foo.org/index.html
+          http://128.138.173.15/cgi-bin/foo.pl
+          https://www.foo.org/login.html
+          https://128.138.173.15/cgi-bin/order-foo.pl
+        end http
+        # the client could also be expanded to check ssh
+        # or ftp connectivity as well
+      end host
+
+   pingtab
+   -------
+
+   Typically, the pinger would be a client running on the same
+   machine as the server.
+
+   Again, each client configuration will be enclosed in a host section.
+
+   Again, perhaps an example will best describe the concept:
+
+      host peep.foo.org
+        class home
+        port 1999
+        theme "Peep Server Theme"
+      end host
+      
+      host failover.foo.org
+        class home
+        port 1999
+        ping
+          www.foo.org
+          128.138.173.15
+          www.foo.org
+          128.138.173.15
+        end ping
+      end host
+
+The pinger Client
+
+   The pinger client would test connectivity of remote machines via
+   Net::Ping::External.  
+
+   Net::Ping::External was chosen because several difficulties with
+   incoporating Net::Ping exist, including the fact that one needs to
+   be root to send ICMP packets when using Net::Ping and the fact that
+   Net::Ping uses the ALRM signal to timeout pings, in conflict with
+   the Peep client library scheduling mechanism. Net::Ping::External
+   was found to be a suitable alternative.
+
+   A prototype has been built, and can easily be incorporated into the 0.5.0
+   release.
+
+The webmonitor Client
+
+   The webmonitor client would monitor we site availability and performance
+   by retrieving page headers via lynx or curl (for https).
+
+   The author is not currently aware of whether lynx or curl have been ported
+   to Windows, for future reference.
+
+   See the webtab section above.
+
+The procmonitor Client
+
+   The procmonitor client would monitor whether and how many of a certain kinds of
+   processes are running.
+
+   See the proctab section above.
+
+See Also
+
+   The Sound Repository and General Peep Configuration PEP
+   (pep-0011.txt)
+
+Copyright
+
+  Issued under the Gnu General Public License.
+
+  Michael Gilfix <mgilfix@eecs.tufts.edu> Copyright (C) 2001

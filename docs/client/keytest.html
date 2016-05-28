@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<TITLE>keytest</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;keytest</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#options">OPTIONS</A></LI>
+	<LI><A HREF="#examples">EXAMPLES</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>keytest - Manual event and state generator for Peep: The Network Auralizer</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<P>keytest is a utility for testing and experimenting with a Peep installation.
+It allows you to play server sounds by mapping keys to various events and
+states. The mapping is as follows:</P>
+<PRE>
+  Row 1234567890     changes the volume of the next state sound.
+  Row qwertyuiop[]\\ plays events 0-12.
+  Row asdfghjkl;'    plays events 13-24.
+  Row zxcvbnm,./     plays states 0-9.
+  Row !@#$%^&amp;*()_+   changes the next stereo location (left - right).
+  Row QWERTYUIOP{}|  changes the next event's priority.
+  Row ASDFGHJKL:&quot;    changes the next event's dither time.</PRE>
+<P>This application allows you to get a good feel for how your sound theme
+sounds all together, as well as server performance.</P>
+<P>
+<HR>
+<H1><A NAME="options">OPTIONS</A></H1>
+<P>keytest supports the basic client options:</P>
+<PRE>
+    --server=[HOST]       The host (or IP address) to connect to
+    --port=[PORT NO]      The port to use
+    --debug=[NUMBER]      Enable debugging. (Def:  0)
+    --silent              Does not produce output.  To eliminate all output,
+                          either the debug option should be set to 0 or
+                          an output file should be specified.
+    --help                Prints a simple help message</PRE>
+<P>
+<HR>
+<H1><A NAME="examples">EXAMPLES</A></H1>
+<PRE>
+  keytest</PRE>
+<PRE>
+  keytest --server=localhost --port=2001</PRE>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix and Alva Couch (C) 2000</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), Net::Peep::Client::Logparser,
+Net::Peep::Client::Sysmonitor, peepd.</P>
+<P><A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;keytest</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

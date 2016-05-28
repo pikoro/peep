@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<TITLE>Net::Peep::Client::Logparser</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Client::Logparser</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<UL>
+
+		<LI><A HREF="#export">EXPORT</A></LI>
+	</UL>
+
+	<LI><A HREF="#methods">METHODS</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#terms and conditions">TERMS AND CONDITIONS</A></LI>
+	<LI><A HREF="#change log">CHANGE LOG</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::Peep::Client::Logparser - Perl extension for the logparser, the event
+generator for Peep.</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use Net::Peep::Client::Logparser;
+  my $parser = new Net::Peep::Client::Logparser;</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>Provides support methods and utilities for logparser, the event
+generator for Peep.  Inherits Net::Peep::Client.</P>
+<P>
+<H2><A NAME="export">EXPORT</A></H2>
+<P>None by default.</P>
+<P>
+<HR>
+<H1><A NAME="methods">METHODS</A></H1>
+<P>Note that this section is somewhat incomplete.  More
+documentation will come soon.</P>
+<PRE>
+    new() - The constructor</PRE>
+<PRE>
+    Start() - Begins tailing log files and signaling events.
+    Terminates by entering the Net::Peep::Client-&gt;MainLoop() method.</PRE>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix &lt;<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>&gt; Copyright (C) 2001</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), Net::Peep::BC, Net::Peep::Log, Net::Peep::Parse,
+Net::Peep::Client, logparser.</P>
+<P><A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></P>
+<P>
+<HR>
+<H1><A NAME="terms and conditions">TERMS AND CONDITIONS</A></H1>
+<P>You should have received a file COPYING containing license terms
+along with this program; if not, write to Michael Gilfix
+(<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>) for a copy.</P>
+<P>This version of Peep is open source; you can redistribute it and/or
+modify it under the terms listed in the file COPYING.</P>
+<P>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</P>
+<P>
+<HR>
+<H1><A NAME="change log">CHANGE LOG</A></H1>
+<P>$Log: Net::Peep::Client::Logparser.html,v $
+<P>Revision 1.1  2001/04/23 10:19:14  starky
+<P>Commit in preparation for release 0.4.1.
+<P>
+<P>o Altered package namespace of Peep clients to Net::Peep
+<P>  at the suggestion of a CPAN administrator.
+<P>o Changed Peep::Client::Log to Net::Peep::Client::Logparser
+<P>  and Peep::Client::System to Net::Peep::Client::Sysmonitor
+<P>  for clarity.
+<P>o Made adjustments to documentation.
+<P>o Fixed miscellaneous bugs.
+<P>
+Revision 1.9  2001/04/17 06:46:21  starky
+Hopefully the last commit before submission of the Peep client library
+to the CPAN.  Among the changes:</P>
+<P>o The clients have been modified somewhat to more elagantly
+  clean up pidfiles in response to sigint and sigterm signals.
+o Minor changes have been made to the documentation.
+o The Peep::Client module searches through a host of directories in
+  order to find peep.conf if it is not immediately found in /etc or
+  provided on the command line.
+o The make test script conf.t was modified to provide output during
+  the testing process.
+o Changes files and test.pl files were added to prevent specious
+  complaints during the make process.</P>
+<P>Revision 1.8  2001/04/04 05:40:00  starky
+Made a more intelligent option parser, allowing a user to more easily
+override the default options.  Also moved all error messages that arise
+from client options (e.g., using noautodiscovery without specifying
+a port and server) from the parseopts method to being the responsibility
+of each individual client.</P>
+<P>Also made some minor and transparent changes, such as returning a true
+value on success for many of the methods which have no explicit return
+value.</P>
+<P>Revision 1.7  2001/03/31 07:51:34  mgilfix</P>
+<PRE>
+  Last major commit before the 0.4.0 release. All of the newly rewritten
+clients and libraries are now working and are nicely formatted. The server
+installation has been changed a bit so now peep.conf is generated from
+the template file during a configure - which brings us closer to having
+a work-out-of-the-box system.</PRE>
+<P>Revision 1.7  2001/03/31 02:17:00  mgilfix
+Made the final adjustments to for the 0.4.0 release so everything
+now works. Lots of changes here: autodiscovery works in every
+situation now (client up, server starts &amp; vice-versa), clients
+now shutdown elegantly with a SIGTERM or SIGINT and remove their
+pidfiles upon exit, broadcast and server definitions in the class
+definitions is now parsed correctly, the client libraries now
+parse the events so they can translate from names to internal
+numbers. There's probably some other changes in there but many
+were made :) Also reformatted all of the code, so it uses
+consistent indentation.</P>
+<P>Revision 1.6  2001/03/30 18:34:12  starky
+Adjusted documentation and made some modifications to Peep::BC to
+handle autodiscovery differently.  This is the last commit before the
+0.4.0 release.</P>
+<P>Revision 1.5  2001/03/28 02:41:48  starky
+Created a new client called 'pinger' which pings a set of hosts to check
+whether they are alive.  Made some adjustments to the client modules to
+accomodate the new client.</P>
+<P>Also fixed some trivial pre-0.4.0-launch bugs.</P>
+<P>Revision 1.4  2001/03/27 00:44:19  starky
+Completed work on rearchitecting the Peep client API, modified client code
+to be consistent with the new API, and added and tested the sysmonitor
+client, which replaces the uptime client.</P>
+<P>This is the last major commit prior to launching the new client code,
+though the API or architecture may undergo some initial changes following
+launch in response to comments or suggestions from the user and developer
+base.</P>
+<P>Revision 1.3  2001/03/19 07:47:37  starky
+Fixed bugs in autodiscovery/noautodiscovery.  Now both are supported by
+Peep::BC and both look relatively bug free.  Wahoo!</P>
+<P>Revision 1.2  2001/03/18 17:17:46  starky
+Finally got LogParser (now called logparser) running smoothly.</P>
+<P>Revision 1.1  2001/03/16 21:26:12  starky
+Initial commit of some very broken code which will eventually comprise
+a rearchitecting of the Peep client libraries; most importantly, the
+Perl modules.</P>
+<P>A detailed e-mail regarding this commit will be posted to the Peep
+develop list (<A HREF="mailto:peep-develop@lists.sourceforge.net">peep-develop@lists.sourceforge.net</A>)</P>
+<P>Contact me (Collin Starkweather) at</P>
+<PRE>
+  collin.starkweather@colorado.edu</PRE>
+<P>or</P>
+<PRE>
+  collin.starkweather@collinstarkweather.com</PRE>
+<P>with any questions.</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Client::Logparser</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

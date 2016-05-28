@@ -1,0 +1,29 @@
+PEP: 0001
+Title: PEP Purpose and Guidelines
+Version: $Revision: 1.1 $
+Author: mgilfix@eecs.tufts.edu (Michael Gilfix)
+Status: Active
+Type: Informational
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+What is a PEP?
+
+  PEP is a Peep Enchancement Proposal for adding new features to the "Peep:
+  the Network Auralizer" infrastructure. It is based on the PEP system used by
+  Python (Python Enhancement Proposals) and follows similar guidelines. The
+  PEP documents are stored in CVS in the Peep repository and are also avaiable
+  for web-based viewing.
+
+  The PEP documents is intended to be a replacement for the Sourceforge
+  feature tracker in assembling serious proposal documents. Unfortunately,
+  the Sourceforge tracker doesn't contain enough features (i.e, true revision
+  control) and text-based editing is much easier.
+
+PEP Guidelines
+
+  As the Peep PEP's are based on the Python guidelines, they will follow
+  the same system. This system is outlined in the Python PEP, which can be
+  found at:
+
+    http://python.sourceforge.net/peps/pep-0001.html

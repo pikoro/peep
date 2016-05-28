@@ -1,0 +1,324 @@
+PEP: 0011
+Title: Sound Repository Organization and General Peep Configuration for 0.5.0
+Version: $Revision; 1.1$
+Author: mgilfix@eecs.tufts.edu (Michael Gilfix)
+        collin.starkweather@colorado.edu (Collin Starkweather),
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Abstract
+
+   Michael has already done much of the work behind organization of the
+   sound repository.
+
+   Currently, __INDEX__ files are XML documents defining single events,
+   coupled events, states, and heartbeats. More details can be found in
+   appendix [34]A.
+
+   The existing organizational structure nicely lays the groundwork for a
+   higher-level organizational structure that would be necessary for
+   creating easy-to-use themes.
+
+   The needs that I perceive for the sound repository reorganization
+   include the following:
+
+    1. Sound descriptors. These could simply be the name of a sound file,
+       but a string should be used to identify the sound which allows a
+       user to identify the sound regardless of where the sound
+       repository is located. This will eliminate long file names in
+       configuration and theme files. A subsidiary requirement of this
+       need is the ability to communicate a sound from the client to the
+       server by means of the string rather than type and sound values;
+       for example, a user should be able to supply the peck utility with
+       a sound name, which would then be communicated to the server.
+    2. Names for sets of sounds. For example, if there are 8 ``flowing
+       water'' sounds which are to be played at various load levels, a
+       single name (e.g., Water) should be able to be used to define the
+       set of sounds.
+    3. For sets of sounds, an ordering should be associated with them.
+       The ordering would be used, for example, to associate various load
+       levels with sounds.
+    4. Sound attributes.  For example, a description associated with
+       the sound would improve a user's ability to browse sounds. An
+       attribute defining usage would allow the user to better
+       ascertain the potential use of a sound file (e.g., event or
+       state). Another attribute may define what kind of sound format
+       (e.g., .wav the file is in. These are just examples.
+
+   These needs, as discussed on the mailing list, are an ideal
+   application of XML.
+
+   Since most users should not be expected to read and write XML and
+   related documents (e.g., DTDs or XSD files), implicit in this
+   proposal is the creation of a simple utility to identify and
+   manipulate the XML documents.
+
+Background
+
+  Michael has already sketched out some preliminary work behind the
+  organization of the sound repository. INDEX files are currently XML
+  documents defining:
+
+  1. Single events, including:
+
+    (a) Name
+    (b) Length
+    (c) Segments
+    (d) Suggested
+    (e) Description
+
+  2. Coupled events, including:
+
+    (a) Primary:
+    (b) Secondary:
+    (c) Description:
+
+  3. States, including:
+
+    (a) Name
+    (b) Segments
+    (c) Description
+
+  4. Heartbeats, which have the same structure as events, including:
+
+   (a) Name
+   (b) Length
+   (c) Segments
+   (d) Suggested
+   (e) Description
+
+  Where the following definitions apply:
+
+    Length:      Of the sound file, in seconds.
+
+    Segments:    How many sound files are associated with an
+                 event/state.
+
+    Suggested:   The kind of network event to use the sound file for.
+
+    Description: The description of the sound file.
+
+    Primary:     The primary coupled sound.
+
+    Secondary:   The secondary coupled sound.
+
+    Description: A description of the event
+
+  The existing organization structure nicely lays the groundwork for a
+  higher-level organizational structure that would be necessary for creating
+  easy-to-use themes.
+
+The __ INDEX__ Files
+
+  The current header in use in a __INDEX__ file:
+
+  <!--
+  This index file contains descriptions of the sound files
+  located in the current directory for use with
+  Peep: the network auralizer.
+
+  The sound files included with Peep are:
+  Copyright (C) 2000 Michael Gilfix and Alva Couch.
+
+  The structure of the tags used is:
+
+  For a single event (length and segments are optional):
+
+  <event>
+    <name> Name goes here </name>
+    <length> length in "# sec" </length>
+    <segments> How many sound files for the event </segments>
+    <suggested>
+      The kind of network event to use the sound for.
+    </suggested>
+    <description>
+      A description of the event.
+    </description>
+  </event>
+
+  For coupled events:
+  <couple>
+    <primary> The primary coupled sound </primary>
+    <secondary> The second, complementary sound </secondary>
+    <description>
+      A description of the event.
+    </description>
+  </couple>
+
+  For state events:
+  <state>
+    <name> Name goes here </name>
+    <segments> Number of sound segments to load for a state </segments>
+    <description>
+      A description of the event.
+    </description>
+  </state>
+
+  For a heartbeat sound:
+  <heartbeat>
+    ... Same internal structure as an event
+  </heartbeat>
+  -->
+
+  <!-- -------------------------------------------------------- -->
+
+Specification
+
+   In addition to the __INDEX__ files, I propose an XML document
+   called sound.xml which would define descriptors and metadata for
+   all of the sounds contained in the repository.
+
+   I also would propose separating events and states into their own
+   XML documents.
+
+   I think that this PEP could use some substantial thought, and the
+   documents described in this PEP are examples only.  There are alot
+   of things to think about here, and the ideas as they stand need
+   more cohesiveness.
+
+   Rather than discuss each in detail, I'll provide examples:
+
+   sounds.xml
+   ----------
+
+   Note that individual sounds are defined, including the filename of
+   the sound and other metadata such as a descriptor.  The descriptors
+   are used to specify sounds in themes (see the Themes PEP,
+   pep-0010.txt), for example.
+
+   After the sounds are defined, groups of sounds can be defined.
+
+      <?xml version='1.0' encoding='UTF-8'>
+
+      <sound>
+         <name>Redwing Blackbird 1</name>
+         <category>Wetlands</category>
+         <type>event</type>
+         <format>wav</format>
+         <length>2.8 sec</length>
+         <description>
+            3 quick chirps followed by a long call.
+         </description>
+         <filename>/usr/local/share/peep/sounds/wetlands/events/redwing-blackbird-01.
+      01</filename>
+      </sound>
+      
+      <sound>
+         <name>Leaves 1</name>
+         <category>Wetlands</category>
+         <type>state</type>
+         <format>wav</format>
+         <length>2.0 sec</length>
+         <description>
+            The sound of the wind rustling through the tree tops.
+         </description>
+         <filename>/usr/local/share/peep/sounds/wetlands/states/leaves.01</filename>
+      </sound>
+      
+      <!-- More sounds defined here ... -->
+      
+      <group>
+         <name>Leaves</name>
+         <segment>
+            <name>Leaves 1</name>
+            <index>1</index>
+         </segment>
+         <segment>
+            <name>Leaves 2</name>
+            <index>2</index>
+         </segment>
+         <segment>
+            <name>Leaves 3</name>
+            <index>3</index>
+         </segment>
+         <segment>
+            <name>Leaves 4</name>
+            <index>4</index>
+         </segment>
+      </group>
+
+   events.xml
+   ----------
+
+   In this example, an event is defined as an association between a
+   descriptor and a regular expression.  Other metadata is included as
+   well; for example, any of the attributes defined for the event may
+   be overriden within the context of the platform tags.  The events
+   are associated with sounds via themes or entries in the peep.conf
+   file.
+
+   The descriptors are used to specify events in themes (see the
+   Themes PEP, pep-0010.txt), for example.
+
+      <?xml version='1.0' encoding='UTF-8'>
+      
+      <event>
+         <name>out-sendmail</name>
+         <description>Sendmail outgoing mail</description>
+         <application>sendmail</application>
+         <location>128</location>
+         <priority>1</priority>
+         <pattern>sendmail.*:.*from=</pattern>
+      </event>
+      
+      <event>
+         <name>inc-sendmail</name>
+         <description>Sendmail incoming mail</description>
+         <platform>
+            <!-- we can define a pattern specifically for Solaris
+                 that overrides the default pattern -->
+            <name>solaris</name>
+            <pattern>sendmail.*:.*to=</pattern>
+         </platform>
+         <location>128</location>
+         <priority>1</priority>
+         <pattern>sendmail.*:.*to=.*stat=Sent</pattern>
+      </event>
+
+   states.xml
+   ----------
+
+   In this example, a state is defined as an association between a
+   descriptor and a set of threshholds.  Other metadata is included as
+   well.  The states are associated with sounds via themes or entries
+   in the peep.conf file.
+
+   The descriptors are used to specify states in themes (see the
+   Themes PEP, pep-0010.txt), for example.
+
+      <?xml version='1.0' encoding='UTF-8'>
+      
+      <state>
+         <name>Load</name>
+         <description>5 Minute Load Average</description>
+         <threshhold>
+            <level>1.5</level>
+            <index>1</index>
+         </threshhold>
+         <threshhold>
+            <level>2.0</level>
+            <index>2</index>
+         </threshhold>
+         <threshhold>
+            <level>2.5</level>
+            <index>3</index>
+         </threshhold>
+         <threshhold>
+            <level>INF</level>
+            <index>4</index>
+         </threshhold>
+      </state>
+
+See Also 
+
+   The Themes PEP (pep-0010.txt)
+
+Copyright
+
+  Issued under the Gnu General Public License.
+
+  Michael Gilfix <mgilfix@eecs.tufts.edu> Copyright (C) 2001
+
+

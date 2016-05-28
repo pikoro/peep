@@ -1,0 +1,304 @@
+<HTML>
+<HEAD>
+<TITLE>Peep</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Peep</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#introduction">INTRODUCTION</A></LI>
+	<LI><A HREF="#creating a custom peep client">CREATING A CUSTOM PEEP CLIENT</A></LI>
+	<LI><A HREF="#creating the callback for your client application">CREATING THE CALLBACK FOR YOUR CLIENT APPLICATION</A></LI>
+	<LI><A HREF="#default client options">DEFAULT CLIENT OPTIONS</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#acknowledgements">ACKNOWLEDGEMENTS</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#related software">RELATED SOFTWARE</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::Peep - Perl extension for Peep:  The Network Auralizer.</P>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>Peep is an open source free software network monitoring tool issued
+under the Gnu Public License that presents information via audio
+output.  Network diagnosis with Peep is made not only based on single
+network events, but the network as a whole ``sounds normal.''</P>
+<P>This document serves as an introduction to the Peep clients and the
+Peep client architecture.</P>
+<P>
+<HR>
+<H1><A NAME="introduction">INTRODUCTION</A></H1>
+<P>Peep is built on a client-server model in which the clients generate
+``events'' based on user-defined criteria (e.g., whether a packet denial
+has been logged or a broken link on a web site was found).  One or
+several Peep servers are then notified of the events by clients, at
+which time an audio signal is generated.</P>
+<P>The clients, which include such applications as <CODE>logparser</CODE> and
+<CODE>sysmonitor</CODE> and for which this document constitutes introductory
+documentation, are written in Perl, IMHO about the coolest language
+ever.  The bulk of the client code is composed of a set of Perl
+modules comprising objects and base classes for use by Peep clients
+and their derivatives.</P>
+<P>The server, <CODE>peepd</CODE>, is written in C.</P>
+<P>Both the client and server are available for download free of charge
+from the Peep homepage located at</P>
+<PRE>
+  <A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></PRE>
+<P><EM>COMING SOON:  </EM>The Peep client modules and executables are also available on the CPAN
+(Comprehensive Perl Archive Network) for installation via the
+time-honored</P>
+<PRE>
+  perl -MCPAN -e &quot;install Net::Peep&quot;</PRE>
+<P>In fact, this is the preferred method of installation of the Peep
+clients.</P>
+<P>Consult the core Peep documentation for more information on
+installation and usage of Peep.</P>
+<P>The Peep client library is composed of the following modules:</P>
+<PRE>
+  Perl Modules
+  ------------</PRE>
+<PRE>
+  Net::Peep            A non-functional module.  Simply holds 
+                       POD documentation for Peep; in fact, 
+                       it holds the documentation that you are
+                       reading right now!</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Conf.html">Net::Peep::Conf</A>           The Peep configuration object.  An  
+                       object representation of peep.conf.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Parse.html">Net::Peep::Parse</A>          The Peep configuration file parser.  Reads  
+                       peep.conf and populates Peep::Conf 
+                       appropriately.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::BC.html">Net::Peep::BC</A>             The Peep broadcast module.  Used to notify Peep  
+                       servers that an event has been generated.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Log.html">Net:::Peep::Log</A>            Provides utility methods for logging, debugging,
+                       and benchmarking.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Client.html">Net::Peep::Client</A>         Base and utility class for Peep clients and 
+                       client modules.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Client::Logparser.html">Net::Peep::Client::Logparser</A>  Utility class for the logparser client.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Client::Sysmonitor.html">Net::Peep::Client::Sysmonitor</A> Utility class for the sysmonitor client.</PRE>
+<PRE>
+  <A HREF="./client/Net::Peep::Peck.html">Net::Peep::Peck</A>           Utility class for the peck client.</PRE>
+<PRE>
+  Clients
+  -------</PRE>
+<PRE>
+  <A HREF="./client/logparser.html">logparser</A>            Generates events based on matching regular
+                       expressions to tailed logs (e.g., 
+                       /var/log/messages).</PRE>
+<PRE>
+  <A HREF="./client/sysmonitor.html">sysmonitor</A>           Generates events based on system events (e.g.,
+                       load average exceeding 2.0).</PRE>
+<PRE>
+  <A HREF="./client/peck.html">peck</A>                 Generates ad hoc Peep events.  Primarily for 
+                       testing purposes.</PRE>
+<PRE>
+  <A HREF="./client/keytest.html">keytest</A>              Generates ad hoc Peep events.  Primarily for 
+                       fun.</PRE>
+<P>Please refer to the individual modules of the Peep distribution (e.g.,
+Net::Peep::BC) or the Peep client executables (e.g., logparser) for
+further documentation.</P>
+<P>
+<HR>
+<H1><A NAME="creating a custom peep client">CREATING A CUSTOM PEEP CLIENT</A></H1>
+<P>Please note that the Peep client API has not yet been finalized, and
+is subject to change.  If you have any problems with your custom-built
+client as a result of changes made to the client API, please contact
+Collin Starkweather at <A HREF="mailto:collin.starkweather@colorado.edu.">collin.starkweather@colorado.edu.</A></P>
+<P>The Net::Peep::Client module makes constructing a custom Peep client a
+breeze.</P>
+<P>The Net::Peep::Client::Logparser and Net::Peep::Client::Sysmonitor modules are
+excellent references.  Pay particular attention to the Start methods
+in each and thier usage of the Net::Peep::BC module, which notifies
+the Peep server of Peep client events.</P>
+<P>A Peep client by no means has to be a module, however.  It can just as
+easily be created as a script.  The Peep::Client::Logparser and
+Peep::Client::Sysmonitor modules, which correspond to the logparser
+and system clients, were created as modules simply for ease of
+distribution.</P>
+<P>Basically, the same formula is used for each client.</P>
+<P>0) This goes without saying, but I will say it anyway.  First you have
+   to instantiate a Net::Peep::Client object.  For convenience, we
+   will also create a Net::Peep::Log object for logging and debugging
+   messages.  Creating the logging object is by no means necessary.</P>
+<PRE>
+     use Net::Peep::Client;
+     use Net::Peep::Log;
+     my $client = new Net::Peep::Client.
+     my $log    = new Net::Peep::Log;
+</PRE>
+<PRE>
+
+1) Tell Net::Peep::Client what command-line options to parse.  For more
+   information on how to define command-line options, see
+   Getopt::Long, which Net::Peep::Client uses to parse the options.</PRE>
+<PRE>
+   To do this, create a hash of options.  For more information on the
+   format of the options, see the documentation for Getopt::Long.</PRE>
+<PRE>
+   For example, if you want to use the options 'foo' and 'bar', with
+   'foo' accepting a string and 'bar' a binary flag (implying that nobar
+   is the negation of the option):</PRE>
+<PRE>
+     my $foo = ''; # be sure to initialize your options
+     my $bar = 0;
+     my %options = (
+       'foo=s' =&gt; \$foo, # =s implies a string is expected
+       'bar!'  =&gt; \$bar  # ! implies negation with nobar
+     );</PRE>
+<PRE>
+   Note that Net::Peep::Client accepts a set of default command-line
+   options common to all Peep clients and provides accessors to obtain
+   the values assigned to each.  These include</PRE>
+<PRE>
+     debug
+     daemon
+     autodiscover
+     config 
+     output
+     pidfile
+     server
+     port
+     silent
+     help</PRE>
+<PRE>
+   Explanations of each are included elsewhere in this documentation.</PRE>
+<P>2) Parse the command-line options and get their values.  This is done
+   with the <CODE>Net::Peep::Client-&gt;parseopts()</CODE> method:</P>
+<PRE>
+     $client-&gt;parseopts(%options);</PRE>
+<PRE>
+   As part of our example, we will print or log the values of 'foo' and
+   'bar' for the user to see.  Note that following the parsing of the
+   default command-line options by the Net::Peep::Client object,</PRE>
+<PRE>
+   o The log class has been initialized to log to whatever file was 
+     specified by the 'logfile' option (or STDERR if none was specified),
+     and 
+   o Debugging levels that were specified on the command-line have 
+     been set.</PRE>
+<PRE>
+     $log-&gt;log(&quot;You specified the option [foo] to be [$foo].&quot;); 
+     $log-&gt;log(&quot;You specified the option [bar] to be [$bar].&quot;);</PRE>
+<PRE>
+   You may also want to take specific actions based on the values of
+   the options.</PRE>
+<P>3) Parse the Peep configuration file.  This is done with the
+   <CODE>Net::Peep::Client-&gt;</CODE>parseconf()&gt; method:</P>
+<PRE>
+     $client-&gt;parseconf();</PRE>
+<PRE>
+   The name of the configuration file can be specified on the command
+   line with the C&lt;option&gt;.  (This is one of the set of standard
+   options that the Net::Peep::Client object parses).  If it is not passed
+   in as a command-line argument, it defaults to C&lt;/etc/peep.conf&gt;.</PRE>
+<PRE>
+   After you have parsed the configuration file, you can get a
+   configuration object which has all of your option and configuration
+   information.</PRE>
+<PRE>
+   The C&lt;Net::Peep::Client-E&lt;gt&gt;getconf()&gt; method returns a
+   Net::Peep::Conf Peep configuration object populated with all of the
+   information specified in the Peep configuration file:</PRE>
+<PRE>
+     my $conf = $client-&gt;getconf();</PRE>
+<PRE>
+   See the Net::Peep::Conf documentation for more detail.</PRE>
+<P>4) Register a callback.  This should be a reference to a subroutine,
+   and is registered by using the <CODE>Net::Peep::Client-&gt;callback()</CODE>
+   method:</P>
+<PRE>
+     $client-&gt;callback(sub { &amp;MyLoop($foo,$bar) });</PRE>
+<PRE>
+   Typically, you would have a call to the
+   C&lt;Net::Peep::BC-E&lt;gt&gt;send()&gt; method somewhere in your loop.  See
+   the Net::Peep::BC (BC stands for BroadCast) documentation for more
+   information.</PRE>
+<PRE>
+   More detailed information on creating the looping subroutine can be
+   found below.</PRE>
+<P>5) Finally, enter the main loop:</P>
+<PRE>
+     $client-&gt;MainLoop(); # executes the callback once</PRE>
+<PRE>
+   If your client is an event-driven client (that is, if it processes
+   its own events), then MainLoop should be called with no arguments,
+   in which case it executes the callback once.</PRE>
+<PRE>
+   If your client is a looping client (that is, if it enters into an
+   infinite loop which is called at regular intervals), then call
+   MainLoop with an argument indicating how many seconds you want
+   between calls to the callback; e.g.,</PRE>
+<PRE>
+     $client-&gt;MainLoop(10); # execute the callback every 10 seconds</PRE>
+<P>That is all there is to it!</P>
+<P>
+<HR>
+<H1><A NAME="creating the callback for your client application">CREATING THE CALLBACK FOR YOUR CLIENT APPLICATION</A></H1>
+<P>Coming soon.</P>
+<P>
+<HR>
+<H1><A NAME="default client options">DEFAULT CLIENT OPTIONS</A></H1>
+<P>Coming soon.</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix &lt;<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>&gt; Copyright (C) 2001</P>
+<P>Collin Starkweather &lt;<A HREF="mailto:collin.starkweather@colorado.edu">collin.starkweather@colorado.edu</A>&gt;</P>
+<P>
+<HR>
+<H1><A NAME="acknowledgements">ACKNOWLEDGEMENTS</A></H1>
+<P>Many thanks to the folks at SourceForge for creating a robust
+development environment to support open source projects such as Peep.</P>
+<P>If you are not familiar with SourceForge, please visit their site at</P>
+<PRE>
+  <A HREF="http://www.sourceforge.net">http://www.sourceforge.net</A></PRE>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), logparser, sysmonitor, peck.</P>
+<P>
+<HR>
+<H1><A NAME="related software">RELATED SOFTWARE</A></H1>
+<P>For those interested in a robust network and systems monitoring
+tools, your humble author has found Big Brother to be a valuable
+resource which is complementary to Peep.</P>
+<P>You can find more information on Big Brother at</P>
+<PRE>
+  <A HREF="http://www.bb4.com">http://www.bb4.com</A></PRE>
+<P>Those who enjoy Peep may also enjoy checking out logplay, which is
+similar in concept but fills a different niche.</P>
+<P>You can find more information on logplay at</P>
+<PRE>
+  <A HREF="http://projects.babblica.net/logplay">http://projects.babblica.net/logplay</A></PRE>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Peep</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

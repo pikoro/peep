@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<TITLE>Net::Peep::Parse</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Parse</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<UL>
+
+		<LI><A HREF="#export">EXPORT</A></LI>
+		<LI><A HREF="#methods">METHODS</A></LI>
+	</UL>
+
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#terms and conditions">TERMS AND CONDITIONS</A></LI>
+	<LI><A HREF="#change log">CHANGE LOG</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::Peep::Parse - Perl extension for parsing configuration files for
+Peep: The Network Auralizer.</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use Net::Peep::Parse;
+  my $parser = new Net::Peep::Parse;</PRE>
+<PRE>
+  # loadConfig returns a Net::Peep::Conf object</PRE>
+<PRE>
+  my $config = $parser-&gt;loadConfig(config =&gt; '/etc/peep.conf', app =&gt; 'LogParser');</PRE>
+<PRE>
+  # all of the configuration information in /etc/peep.conf
+  # is now available through the observer methods in the
+  # Net::Peep::Conf object</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>Net::Peep::Parse parses a Peep configuration file and returns a
+Net::Peep::Conf object whose accessors contain all the information
+found in the configuration file.</P>
+<P>
+<H2><A NAME="export">EXPORT</A></H2>
+<P>None by default.</P>
+<P>
+<H2><A NAME="methods">METHODS</A></H2>
+<PRE>
+  loadConfig(%options) - loads configuration information found in the
+  file $options{'config'} for application $options{'app'}.  Returns a
+  Net::Peep::Conf object.</PRE>
+<PRE>
+  parseConfig($config) - parses the configuration file $config.</PRE>
+<PRE>
+  parseClass($filehandle,$classname) - parses the class definition
+  section of a configuration file.</PRE>
+<PRE>
+  parseClient($filehandle,$client) - parses the client definition
+  section of a configuration file.</PRE>
+<PRE>
+  parseEvents($filehandle) - parses the event definition section of a
+  configuration file.</PRE>
+<PRE>
+  parseState($filehandle) - parses the state definition section of a
+  configuration file.</PRE>
+<PRE>
+  parseClientEvents($filehandle) - parses the client event definition
+  section of a configuration file.</PRE>
+<PRE>
+  parseClientDefault($filehandle) - parses the client defaults section
+  of a configuration file.</PRE>
+<PRE>
+  logger() - returns a Net::Peep::Log object for logging and
+  debugging.</PRE>
+<PRE>
+  configObject() - returns a Net::Peep::Conf object for storing and
+  retrieving configuration information.</PRE>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix Copyright (C) 2000</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), Net::Peep::BC, Net::Peep::Dumb, Net::Peep::Log,
+Net::Peep::Conf.</P>
+<P><A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></P>
+<P>
+<HR>
+<H1><A NAME="terms and conditions">TERMS AND CONDITIONS</A></H1>
+<P>You should have received a file COPYING containing license terms
+along with this program; if not, write to Michael Gilfix
+(<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>) for a copy.</P>
+<P>This version of Peep is open source; you can redistribute it and/or
+modify it under the terms listed in the file COPYING.</P>
+<P>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</P>
+<P>
+<HR>
+<H1><A NAME="change log">CHANGE LOG</A></H1>
+<P>$Log: Net::Peep::Parse.html,v $
+<P>Revision 1.1  2001/04/23 10:19:14  starky
+<P>Commit in preparation for release 0.4.1.
+<P>
+<P>o Altered package namespace of Peep clients to Net::Peep
+<P>  at the suggestion of a CPAN administrator.
+<P>o Changed Peep::Client::Log to Net::Peep::Client::Logparser
+<P>  and Peep::Client::System to Net::Peep::Client::Sysmonitor
+<P>  for clarity.
+<P>o Made adjustments to documentation.
+<P>o Fixed miscellaneous bugs.
+<P>
+Revision 1.6  2001/03/31 07:51:35  mgilfix</P>
+<PRE>
+  Last major commit before the 0.4.0 release. All of the newly rewritten
+clients and libraries are now working and are nicely formatted. The server
+installation has been changed a bit so now peep.conf is generated from
+the template file during a configure - which brings us closer to having
+a work-out-of-the-box system.</PRE>
+<P>Revision 1.6   2001/03/31 02:17:00  mgilfix
+Made the final adjustments to for the 0.4.0 release so everything
+now works. Lots of changes here: autodiscovery works in every
+situation now (client up, server starts &amp; vice-versa), clients
+now shutdown elegantly with a SIGTERM or SIGINT and remove their
+pidfiles upon exit, broadcast and server definitions in the class
+definitions is now parsed correctly, the client libraries now
+parse the events so they can translate from names to internal
+numbers. There's probably some other changes in there but many
+were made :) Also reformatted all of the code, so it uses
+consistent indentation.</P>
+<P>Revision 1.5  2001/03/28 02:54:20  starky
+Fixed a bug in the regex in the parseClientHosts method.</P>
+<P>Revision 1.4  2001/03/28 02:41:48  starky
+Created a new client called 'pinger' which pings a set of hosts to check
+whether they are alive.  Made some adjustments to the client modules to
+accomodate the new client.</P>
+<P>Also fixed some trivial pre-0.4.0-launch bugs.</P>
+<P>Revision 1.3  2001/03/27 00:44:19  starky
+Completed work on rearchitecting the Peep client API, modified client code
+to be consistent with the new API, and added and tested the sysmonitor
+client, which replaces the uptime client.</P>
+<P>This is the last major commit prior to launching the new client code,
+though the API or architecture may undergo some initial changes following
+launch in response to comments or suggestions from the user and developer
+base.</P>
+<P>Revision 1.2  2001/03/18 17:17:46  starky
+Finally got LogParser (now called logparser) running smoothly.</P>
+<P>Revision 1.1  2001/03/16 18:31:59  starky
+Initial commit of some very broken code which will eventually comprise
+a rearchitecting of the Peep client libraries; most importantly, the
+Perl modules.</P>
+<P>A detailed e-mail regarding this commit will be posted to the Peep
+develop list (<A HREF="mailto:peep-develop@lists.sourceforge.net">peep-develop@lists.sourceforge.net</A>)</P>
+<P>Contact me (Collin Starkweather) at</P>
+<PRE>
+  collin.starkweather@colorado.edu</PRE>
+<P>or</P>
+<PRE>
+  collin.starkweather@collinstarkweather.com</PRE>
+<P>with any questions.</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Parse</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

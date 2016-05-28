@@ -1,0 +1,1545 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" []>
+<book>
+<bookinfo>
+
+	<TITLE>Peep documentation</TITLE>
+
+
+<subtitle> Documentation is current as of Peep version 0.4.0</>
+
+<author><firstname>Michael Gilfix &nbsp;&nbsp;</><othername>mgilfix@eecs.tufts.edu</>
+</author>
+
+
+
+<abstract><para> This documentation is the general documentation for Peep and includes a description of how to setup and configure Peep and the utilities provided with
+     the package as well as Peep's internals. In other words, this document is for everyone =) </></>
+</bookinfo>
+
+<!-- Start of the table of contents -->
+
+<toc>
+</toc>
+
+<!-- End of the table of contents -->
+<chapter id="Introduction"><title>Introduction</title>
+
+<para>This section introduces you to Peep.
+
+</para>
+
+<sect1 id="WhatisPeep"><title>What is Peep?</title>
+
+<para>This is the Peep general documentation. Peep is a network monitoring tool that represents network information via audio output. Network diagnosis
+   with Peep is made not only based on singular network events, but on whether the network as a whole "sounds normal". This document gives you information
+   about how to install Peep on your system and use Peep effectively. The document also provides developers with information about Peep's internals and
+   tells potential developers how they can get involved in the project.
+
+</para>
+
+<para>At this point, many people might think to themselves, "Well, won't I get annoyed? I don't like computer sounds...". A lot of effort in the development
+   of Peep went to providing a solution to this very problem. Peep doesn't beep at you and it certainly doesn't play a sequence of beeps. Rather, Peep
+   uses sounds from natural environments. Sounds are mapped to arbitrary network events and are mixed together to create an overall sound ambiance. Because
+   the sounds used are taken from natural environments, the resulting ambiance is pleasing to listen to (and can be tweaked to your preferences).
+   Peep is also meant to be played in background. Because humans are very adept at noticing changes quickly and subconsciously, network monitoring with
+   Peep won't interfere with other work.
+
+</para>
+
+<para>Peep was originally developed by Michael Gilfix at Tufts University. It now resides in its new home on Sourceforge and can be found at:
+   <ulink url="http://www.sourceforge.net/projects/peep/">http::/www.sourceforge.net/projects/peep/</ulink>.
+
+</para>
+
+</sect1>
+
+<sect1 id="Revisioninformation"><title>Revision information</title>
+
+<para>This documentation is currently only available in html. If you'd like to see some other formats,
+   send an email my way and I'll do some conversions.
+
+	<itemizedlist>
+		
+<listitem><para>
+ Version 2.0 - Mar 25th, 2001 - Second version, modified extensively for the release of Peep 0.4.0. Available in html only.
+		</para></listitem>
+
+
+<listitem><para>
+ Version 1.0 - Dec 23rd, 2000 - First version, created shortly after the release of 0.3.6. Available in html only.
+	</para></listitem>
+
+</itemizedlist>
+
+</para>
+
+<para>If you find any spelling mistakes or want to add anything, just sends patches my way. In English preferrabley, although I could do French &nbsp; =)
+
+</para>
+
+</sect1>
+
+<sect1 id="Othersourcesofinformation"><title>Other sources of information</title>
+
+<para>The best of source of information is the sourceforge website. I suggest the public forums. However, the peep-develop mailing list is another good source
+   of information. It is currently used for discussing new ideas, coordinating between developers, as well as helping people with installations. The
+   peep-develop mailing list can be reached at <ulink url="mailto::peep-develop@lists.sourceforge.net">peep-develop@lists.sourceforge.net</ulink>. The Peep
+   website is also another good source of information and you can jump to it directly at: <ulink url="http://peep.sourceforge.net">http://peep.sourceforge.net</ulink>.
+   It contains a demo of Peep's capabilities (the demo used at the LISA 2000 conference) and the original <emphasis>best paper</emphasis> presented at that conference in
+   the introduction page.
+
+</para>
+
+<para>If you're interested in creating sounds for Peep or are interested in the software used to do much of the sound processing for Peep, please visit
+   the Goldwave webpage at <ulink url="http://www.goldwave.com">http://www.goldwave.com</ulink>.
+
+</para>
+
+<para>Also, if you're an ALSA user and have any questions concerning
+   your ALSA drivers, please visit their website at <ulink url="http://www.alsa-project.org">.
+   http://www.alsa-project.org</ulink>. Note that only ALSA 0.4.x libraries only are currently supported. This won't change until things settle down for a
+   while with the folks at ALSA.
+
+</para>
+
+</sect1>
+
+<sect1 id="Feedback"><title>Feedback</title>
+
+<para>I rely on you, the reader, to make this document useful and informative. If you have any suggestions, please send them to 
+   <command>(<ulink url="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</ulink>)</command> and I'll try to incoporate those changes in the next version.
+
+</para>
+
+<para>This document took me a while to write so even a "thank you for", "I appreciate this most", or a "this was not immediately clear to me" email would be appreciated.
+</para>
+
+<para>
+
+</para>
+
+</sect1>
+
+<chapter id="GettingstartedwithPeep"><title>Getting started with Peep</title>
+<para>This section will tell you what you need to get started with Peep and how to get on your way.
+
+</para>
+
+
+
+<sect1 id="Whatyouneed"><title>What you need</title>
+
+	<itemizedlist>
+		
+<listitem><para>
+A function Linux system with the development packages installed (gcc, make, etc..)
+		</para></listitem>
+
+
+<listitem><para>
+A sound card and the priveleges to use it
+		
+</para></listitem>
+
+<listitem><para>
+Perl (For the clients) with access to CPAN (Several Perl libraries are required from CPAN)
+		</para></listitem>
+
+
+<listitem><para>
+The Peep source and a Peep sound package. Both of those can be obtained from the sourceforge website or via ftp at: 
+<ulink url="ftp://download.sourceforge.net/pub/sourceforge/peep/">ftp://download.sourceforge.net/pub/sourceforge/peep/</ulink>
+		    </para></listitem>
+
+
+	</itemizedlist>
+
+<para>I also suggest consulting the INSTALL text that is provided with each distribution. It provides similar information to what's found here and might be
+   more current.
+
+</para>
+
+</sect1>
+
+<sect1 id="Extracting"><title>Extracting</title>
+
+<para>This section assumes that you have obtained the source in <command>tar.gz</command> format. If you obtained the code base as an rpm, I suggest doing a
+   <command>man rpm</command> to view the installation options. To unpack the archive in /usr/local/src, you'd most likely want to do:
+
+
+<screen>
+cd /usr/local/src
+</screen>
+<para>
+
+<screen>
+tar -zxf ~/Peep-0.4.0.src.tar.gz
+</screen>
+<para>
+
+<screen>
+cd Peep-0.4.0; tar -zxf ~/Peep-Sounds.0.4.0.tar.gz
+</screen>
+
+Note that the Peep sound package unpackges into <command>sounds/</command> and should be unpacked into the source directory. Sounds will later be
+installed in the correct location when a <command>make install</command> is executed.
+
+</sect1>
+
+<sect1 id="CompilingthePeepserver"><title>Compiling the Peep server</title>
+
+<para>To compile <command>peepd</command>, you'll probably want to do a:
+
+
+<screen>
+./configure
+</screen>
+
+<screen>
+make
+</screen>
+
+<screen>
+make install
+</screen>
+
+<para>To install Peep is a non-standard location, the <command>--prefix=&lt;path&gt;</command> option must be supplied to <command>configure</command>. 
+   The configure provided with Peep also understands some other, non-standard options:
+
+</para>
+
+<para><command>--enable-debug=(0 or 5)</command>: This sets the level of debugging output. The default is to use the lowest level of debugging, 0.
+   To see a list of what information will be printed out with each level of debugging, type <command>./configure --help</command>.
+</para>
+
+<para><command>--with-dynamic-volume</command>: This is the default setting and enables dynamic calculations of volume levels in the mixer.
+</para>
+
+<para><command>--with-static-volume</command>: This disables dynamic volume and uses a fixed volume for each sound. This can fix any sort of hesitations in sound
+   that might result from sound clipping. But this shouldn't happen, so you shouldn't have to do this =) Static volume might give a minor performance
+   increase if your server is getting hit with a lot of events quickly. However, static volume greatly reduces sound output level, so get ready to crank
+   up the stereo.
+</para>
+
+<para><command>--with-libwrap</command>: Compile <command>peepd</command> with tcp wrappers support.
+</para>
+
+<para><command>--with-device-driver</command>: This tells <command>peepd</command> to use standard <command>/dev/audio</command> support. This is the default and so this
+   option will most likely never be used.
+</para>
+
+<para><command>--with-alsa-driver</command>: This compiles <command>peepd</command> using the ALSA libraries, rather than <command>/dev/audio</command>. This code currently
+   support ALSA 0.4.x. Most linux systems ship with 0.5.x as of writing but support for later versions won't be included until ALSA reaches a stable
+   point for developers.
+
+</para>
+
+<para>After <command>peepd</command> has been compiled, the next ste is to configure <command>peep.conf</command> and deploy the clients. Deploying and configuring
+   the client utlities is a little more involved and is described in their respective sections.
+
+</para>
+
+</sect1>
+
+<sect1 id="RunningthePeepserver"><title>Running the Peep server</title>
+
+<para><command>peepd</command> takes several arguments on the command line. This section documents some of the more interesting features. To see the complete
+   list, type <command>$ ./peepd --help</command> at the command prompt. Once started, <command>peepd</command> will log all its output to standard error by default.
+   So, if you're starting the server in daemon mode (the default) and want to suppress the output, I suggest:
+
+
+<screen>
+peepd &lt; /dev/null 2&gt;&amp;1
+</screen>
+
+<para>If you've compiled <command>peepd</command> in debugging mode or want to make sure that everything is running smoothly, I suggest redirecting the
+   logs:
+
+
+<screen>
+peepd -l /var/local/peepd/peepd.log
+</screen>
+
+<para>Also, the <command>--nodaemon</command> option can be a handy way to watch what's going on and make troobleshooting easier. When running in daemon
+   mode <command>peepd</command> logs its pid to <command>/var/run/peepd.pid</command> by default. Depending on which user you use to run the server or
+   for whatever reason if you do not have access to write out a file in <command>/var/run</command>, you can tell peep to write its pid to another
+   location by supplying the -i option:
+
+
+<screen>
+peepd -i /other/location/peepd.pid
+</screen>
+
+<para>You can also tell the server how many voices to use when performing real-time mixing. The default is 32 voices but you can change this
+   on the command line with the -V option:
+
+
+<screen>
+peepd -V 16
+</screen>
+
+<para>Decreasing the number of voices will lower the number of sounds that Peep can play concurrently as well as the number of channels it
+   will allocate for state sounds. However, reducing then number of voices can produce a consider performance increase on slower machines.
+   <command>peepd</command> also supports a feature for recording and playing back events, which is described in the <ulink url="peep-doc.html#2.5">next section</ulink>.
+
+</para>
+
+</sect1>
+
+<sect1 id="Peepsplaybackandrecordingfeatures"><title>Peep's playback and recording features</title>
+
+<para>This section describes a feature in <command>peepd</command> whereby the server can record incoming events for later playback and a closer listen. The
+   events are stored in "round-robin" fashion in a playback file specified on the command-line. The maximum number of events is set as a define in
+   the <command>Playback.h</command> file in the server code and defaults to 3200 events. Fear not about a bulky recording file, however, as a recording file
+   containing 3200 events would occupy roughly 50k of space. There are five options involved with getting the playback code running:
+
+
+<screen>--playback-mode, --record-mode, -f &lt;file&gt;, -t &lt;date&gt;, -e &lt;date&gt;</screen>
+
+</para>
+
+<para>The recording file defaults to "/var/log/peeplog", which is set via a #define in Main.h. Otherwise, events are recorded to the file specified by the
+   -f option. <command>peepd</command> does not do recording by default. To kick <command>peepd</command> into recording mode, you need to use the --record-mode
+   option and optionally the -f option. An example:
+
+
+<screen>./peepd --record-mode -f testlog</screen>
+
+</para>
+
+<para>Then to playback, you need to specify --playback-mode and <command>peepd</command> will playback the events in the log and then exit. As always, -f is
+   optional. An example:
+
+
+<screen>./peepd --playback-mode -f testlog</screen>
+
+</para>
+
+<para>Since there are many events in a single log file, you'll probably want to playback sounds between a specific time. <command>peepd</command> lets you do this
+   through use of the -t (start time) and -e (end time) options. If a -t is given without a -e, <command>peepd</command> will playback from the start time to
+   the last event in the file. The date format used is the same as the output of date except without the specifier for EST/PST. The date format used is defined
+   in Playback.h as a string to strptime. An example:
+
+
+<screen>./peepd --playback-mode -f testlog -t 'Wed Mar 14 22:15:45 2001' -e 'Wed Mar 14 22:17:00 2001'</screen>
+
+</para>
+
+<para>Note that the 24 hr time clock is used. It's less ambiguous and simpler.
+
+</para>
+
+</sect1>
+
+<chapter id="OverviewofhowPeepworks"><title>Overview of how Peep works</title>
+
+<para> The purpose of this section is to give you a brief idea of how Peep does what it does and how to setup your Peep system effectively.
+
+</para>
+
+
+
+<sect1 id="Briefsummaryofitall"><title>Brief summary of it all</title>
+
+<para>The Peep architecture is a producer/consumer architecture where the clients are producers and the servers consumers. Clients are meant to be distributed
+   around the network, scanning for information at the source. Upon discovery of an event, the client sends off the appropriate information to its
+   respective server(s) and the server(s) represent that data accordingly. A simple example scenario would be a single <command>peepd</command> server running
+   on a centralized server and a monitoring system that monitors logs on three different machines. All three monitoring clients report their events to the 
+   server.  Events can be distinguished by the sounds they play or even stereo location. The server has no concept of which client is which. It simply 
+   represents the raw network event data as it receives it. This scenario can easily be expanded to include multiple servers or many more clients, each
+   scanning for different types of information on each machine. Because the sounds used come from natural environments, sound configurations are not
+   limited by musical or harmonic combinations and are as "scalable" as your ear.
+
+</para>
+
+<para>All servers and clients are configured using the same configuration file, <command>peep.conf</command>. The configuration file includes sections containing
+   information specific to each client as well as the "class" or group of servers that it belongs to. It also contains a list of events and state sounds
+   (See <ulink url="peep-doc.html#3.2">section 3.2</ulink>). Mangement
+   of clients and servers is made easier through <ulink url="peep-doc.html#3.3">autodiscovery and
+   leasing</ulink>. Clients are meant to be run as daemons on the respective hosts they monitor and bind with servers automatically. Because all configuration
+   information is stored in a single configuration file, the file can be pushed around to each monitored host on the network and changes made centrally.
+
+</para>
+
+<para>Sounds provided with Peep are organized into different themes and categories. Each theme contains four categories: events, coupled events, state sounds,
+   and heartbeat sounds. The current most complete theme is a "wetlands" venue, and we're trying to organize several sound themes to offer a wide variety
+   of sounds to better meet diverse tastes. The goal of Peep is to provide you with continual network status information while remaining pleasing to the ear.
+   The Peep server is very flexible in how it how represents sounds, so I suggest playing around with the sounds until you find a configuration that's
+   comfortable for you. And when you do, please share that configuration file with others to ease their setup process. So send 'em to me via email at:
+   <ulink url="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu.</ulink>.
+
+</para>
+
+<para>Network monitoring with Peep is based on the idea that humans find it very easy to discern changes from the norm, discern what sounds right, and to
+   discern singluar important sounds from a collection of many sounds. This concept of "normalcy" allows you to diagnosis your network based on the feel of
+   the sound ambiance. In other words, things are normal when "Peep sounds like it did yesterday".
+
+</para>
+
+</sect1>
+
+<sect1 id="EventsStatesandHeartbeats"><title>Events, States, and Heartbeats</title>
+
+<para>This section is very important for taking advantage of Peep's representational capabilities as well as creating a pleasing sound environment for
+   network monitoring. If you're skimming through the doc, I suggest taking the time to read this section with a little more care.
+
+</para>
+
+<para>Sound representation in Peep is divided into three different categories: Events in networks are things that occur once, naturally represented by a
+   a single peep or chirp. Network states represent ongoing network measurements by changing the type, volume, or stereo position of an ongoing
+   background sound. Heartbeats represent the existence or frequency of occurrence of an ongoing network state by playing a sound at varying intervals,
+   such as by changing the frequency of cricket chrips.
+
+</para>
+
+<para>Peep represents discrete events by playing a single natural sound every time the event occurs, such as a bird chirp or a woodpecker's peck. The
+   sounds used are short and staccato in nature and easily distinguishable by the listener. Also, certain network events tend to happen in couples
+   or with a strong correlation to each other. For these sounds, you may wish to select complimentary sounds, so as to better represent coupling.
+   An example of this is the bird sounds chosen in the <ulink url="http://peep.sourceforge.net/intro.html">Peep demo</ulink>. They match incoming and 
+   outgoing email, which we noticed was often received/sent several times in single smtp session between mail servers. Another thing to note is that
+   serveral different sounds can be associated with a single event. When the event occurs, the server picks one randomly. Thus, if you have sounds that
+   sounds very similar, I suggest mapping them to the same event to give more variation and make the sound ambiance more natural.
+
+</para>
+
+<para>State sounds correspond to measurements or weights describing the magnitude of something,s uch as the load average or the number of users on a
+   given machine. Unlike events, which are only  played when Peep is notified of them, Peep plays state information constantly and need  only be
+   signaled when state sounds should change. Peep represents a state with a continuous stream of background sounds, like a waterfall or wind. Each
+   state is internally scalaed to vary from extremely quiet to loud and obnocious. Background sounds should be soothing while the network is 
+   functioning normally and annoying when action is necessary.
+
+</para>
+
+<para>Heartbeats are sounds that occur at constant intervals, analogous to crickets chirping at night. A common folk tale is that one can tell the
+   temperature from the frequency of cricket chirps; likewise we can represent network load as a similar function. Intermittent chirps might
+   mean low load, while a chorus might mean high load. Heartbeats can also report results of an intermittent check (or ping) to see if a given
+   machine, device or server is functioning properly. Note that the server does not distinguish between heartbeat events and regular events.
+   Rather, the event is sent to the server at the appropriate interval, as chosen by the monitoring client.
+
+</para>
+
+</sect1>
+
+<sect1 id="Autodiscoveryandleasing"><title>Auto-discovery and leasing</title>
+
+<para>Auto-discovery and leasing is there to make your life easier. Because clients and servers run over UDP, clients have difficulty
+   determining whether a server is still listening and functioning correctly. With auto-discovery and leasing, clients and servers discover
+   each other automatically via broadcasting and only send information while the server is functioning correctly, i.e maintaining/updating its lease.
+
+</para>
+
+<para>Peep's autodiscovery mechanism uses a domain-class concept to maintain bindings between clients and their respective servers. When a server
+   initializes, it broadcasts its existence to the subnets associated with its classes and announces the classes of which it is a part. The clients
+   that are members of those classes register themselves with the server and begin sending it data. Conversely, should a client start up and
+   broadcast its existence, the server associated with tis class will tell it to begin sending. <emphasis>A broadcast only occurs once during the 
+   initialization of each client or server</emphasis>, after which a list of hosts is maintained on both sides and communications are direct. Both clients
+   and servers can belong to multiple classes at the same time and clients can communicate with many servers concurrently.
+
+</para>
+
+<para>Leasing is used to ensure that clients do not waste network bandwidth and system resources sending packets to servers that are no longer listening.
+   The server sends a lease time to the client during auto-discovery. Just before the lease expires, the server tells the client to renew the lease.
+   The client responds by telling the server that it is still alive and still needs to know about lease information. If the client has not heard from
+   a server after the least time has expired, it will no longer send packets to that server. Similarly if a server does not receive leas acknowledgement
+   from a client, it will no longer attempt to renew its lease with that client.
+
+</para>
+
+<para>Using auto-discovery and leasing is entirely optional. Clients can be run alernatively as "dumb" clients. Auto-discovery and leasing isn't the solution
+   in every situation. Clients that use auto-discovery can have their auto-discovery disabled with the "-noautodiscovery" option and then use the "-server"
+   and "-port" options to figure out where to send their data.
+
+</para>
+
+</sect1>
+
+<sect1 id="Testingandexperimentingwithsounds"><title>Testing and experimenting with sounds</title>
+
+<para>The best way to do this (the way I use), is to load all your state sounds and 24 different event sounds at a time. Then load up KeyTest to just "play"
+   the server with the keyboard. <ulink url="peep-doc.html#5.2">KeyTest</ulink> provides access to all of the servers features by just using the keyboard. It
+   can be used to simulate what network traffic might sound like but by far, is no substitute for the real thing. One problem with using KeyTest is that
+   you lose the randomness or naturalness of network events which greatly affects how all your sounds sound together. So, keep in mind that if it sounds
+   alright with KeyTest, then it will sound a <emphasis>LOT</emphasis> better from actual network sources.
+
+</para>
+
+<para>Another way to do testing might be to write some scripts that call <ulink url="peep-doc.html#5.1">Peck</ulink>. Peck is similar to KeyTest, expect it takes
+   event parameters on the command line and relays them to the server. Thus, one could write a quick script to simulate some network activity calling
+   Peck to get an idea of what things might sound like. But, well, KeyTest is way easier.
+
+</para>
+
+<para>Alternatively, the sounds can be played using the command lines given in the <ulink url="peep-doc.html#3.5">next section</ulink>. As of 0.4.0, the sounds
+   are now organized into themes and categories. Within each theme and category, an <command>__INDEX__</command> file contains a description of teh sounds
+   found within that directory. The format of the index file is given at the top and follows an XML format.
+
+</para>
+
+</sect1>
+
+<sect1 id="Soundsformatsetc"><title>Sounds, formats, etc...</title>
+
+<para>Sounds in Peep are stored in raw PCM signed-16 bit CD quality (44100 kHz, stereo) format. Oh yeah, and they're little endian too =) If that sounds
+   scary, fear not. If you're on a machine whose byte order is like Intel's, just load up your CD quality waves (They should be at 44100 Khz) and
+   convert them to .snd format. Then just rename the sound files according the servers convention and you're all set.
+
+</para>
+
+<para>To play a sound under GNU/Linux, you can do:</>
+
+
+<screen>$ bplay -s 44100 -b 16 -S &lt;file&gt;</screen>
+
+
+
+<para>to play a sound. (bplay homepage : 
+
+<ulink url="http://www.amberdata.demon.co.uk/bplay/">http:://www.amberdata.demon.co.uk/bplay</ulink>). 
+
+Alternatively, if
+   your distribution comes with the GNU/Linux "play" utility, you can play a sound file with:
+
+
+<screen>$ play -c 2 -t raw -r 44100 --size=w -f s &lt;file&gt;</screen>
+
+</para>
+
+<para>Unfortunately, there is no direct support for .wav's at the moment but hopefully that will be added in the future. In the meantime, many tools can
+   convert to .snd format and so you need not worry. Support for .mp3s in the future is iffy. Although it would greatly compress the sound packages, it also
+   brings a large computational overhead (decoding). I want <command>peepd</command> to be able to run on older machines without performance issues. However, .mp3
+   might become an alternative in the future. If anyone is interested in added support for different sound formats, please email me: 
+   <ulink url="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</ulink>.
+
+</para>
+
+</sect1>
+
+<chapter id="Configuringpeepconf"><title>Configuring peep.conf</title>
+
+<para>This section descibes how to configure the Peep server and its utilities. If you're just setting up Peep and are having problems, this is probably the
+   place to look. <emphasis>Note that comments in <command>peep.conf</command> are preceded by '#' marks</emphasis>.
+
+</para>
+
+
+
+<sect1 id="Configuringclasses"><title>Configuring classes</title>
+
+<para>Classes are the mechanism for grouping servers and clients together. A single server or client can belong to several classes simulataneously. Upon
+   startup, both clients and servers broadcast a string of all the classes they belong to. If the broadcaster is a server and the receiver is a client,
+   then that client checks in with that server and obtains a server lease. If the broadcaster is a client, then the server tells the client that it exists
+   and gives that client a lease time.
+
+</para>
+
+<para>To define a class in the configuration file, the following syntax is used:
+
+
+<screen>
+class &lt;CLASSNAME&gt;
+</screen>
+
+<screen>
+  broadcast &lt;BROADCAST_ADDRESS&gt;:&lt;PORT&gt;
+  server &lt;SERVER_NAME&gt;:&lt;PORT&gt;
+</screen>
+
+<screen>
+end class &lt;CLASSNAME&gt; # (The class &lt;CLASSNAME&gt; is optional)
+</screen>
+
+<para>Multiple broadcast addresses and multiple servers can be specified on a single line. Alternatively, you can have a separate <command>broadcast</command> and
+  <command>server</command> entry for each broadcast address and server. The following is an example entry that has a single server <command>darktower</command> in
+  a <command>test</command> and <command>text</command> classes:
+
+
+<screen>
+class test
+  broadcast 10.0.0.255:2000   # Broadcast on my home network is 10.0.0.255 (subnet mask 255.255.255.0)
+  server darktower:2001       # This says that server darktower is responsible for this class and runs on port 2001
+end class test
+</screen>
+
+<screen>
+class text
+  broadcast 10.0.0.255:2000 10.0.1.255:2000  # Broadcast to two subnets at port 2000
+  server darktower:2001                      # Server darktower is part of this class
+end class text
+</screen>
+
+<para>Clients are added into class in their respective sections. For example, <ulink url="peep-doc.html#5.4">LogParser</ulink> can be part of the text and test 
+   class with the following configuration example:
+
+
+<screen>
+client logparser
+  class text test             # All logparser clients send data to servers in classes <emphasis>text</emphasis> and <emphasis>test</emphasis>
+    .
+    .
+    .
+end client logparser
+</screen>
+
+<para>If you do not wish to use auto-discovery, then defining classes is not necessary. One thing to note is that the hostname supplied in the class must
+   match the result return from a C <command>gethostname()</command> call. If you see a warning saying tell you that the server couldn't assemble an identifier
+   string, it may be due to the name you are supplying in the class. You can tell what <command>peepd</command> thinks your name is by looking at the line
+   similar to (Note the underlined part):
+
+
+<screen>
+<emphasis>darktower</> | Using INET Address: 10.0.0.2:2001
+</screen>
+
+</sect1>
+
+<sect1 id="Configuringeventsandstates"><title>Configuring events and states</title>
+
+<para>Event and state sounds are divided into their respective section. Each line in their configuration section specifies the name to associate with that
+   sound, the sound file to load, and the number of sound files to load (if you specify 5 then sound files <command>file.01 - file.05</command> will get loaded 
+   and associated with that particular event or state). State sounds also take an additional option which specifies the time before the current state sound 
+   ends to begin linear fading to a new one. The maximum linear fade time is set to 2 seconds, although this can be adjusted by changing the <command>#define 
+   MAX_FADE_TIME</command> in <command>VoiceMixer.h</command>. Sections specifying the event and state sounds are <emphasis>required</emphasis> and use the following syntax:
+
+
+<screen>
+events
+#Event Type      |          Path to Sound File           | # of sounds to load
+  .
+  .
+  .
+end events
+</screen>
+
+<screen>
+states
+#Event Type   |   Path to Sound File  | # of sounds to load |  Fade between time
+  .
+  .
+  .
+end states
+</screen>
+
+<para>Thus an example configuration might look like:
+
+
+<screen>
+events
+#Event Type      |         Path to Sound File           | # of sounds to load
+inc-mail     sounds/wetlands/coupled/whistle-01.*          1
+login        sounds/wetlands/events/sigh.*                 1
+out-mail     sounds/wetlands/coupled/whistle-02.*          1
+logout       sounds/wetlands/events/croak.*                3
+su           sounds/wetlands/events/light-chirps-04.*      1
+bad-query    sounds/wetlands/events/thrush-01.*            1
+badsu        sounds/wetlands/events/metallic.*             1
+ping         sounds/wetlands/heartbeats/cricket-chirp-01.* 1
+end events
+</screen>
+
+
+<screen>
+states
+#Event Type   |   Path to Sound File  | # of sounds to load |  Fade between time
+loadavg           sounds/wetlands/states/water-01.*   8                 0.7
+users             sounds/wetlands/states/rain-01.*    1                 1.5
+something         sounds/wetlands/states/leaves.*     4                 0.7
+end states
+</screen>
+
+<para>The names given in events are to make configuring the clients easier, rather than remember the internal number assigned to each event by the server (The
+   numbers are just assigned in ascending order as the server reads in events). Instead, the clients can refer to the event by name and the Perl 
+   libraries provided will convert the name into the appropriate number. For more on this, see <ulink url="peep-doc.html#6.8">section 6.8</ulink>.
+
+</para>
+
+</sect1>
+
+<sect1 id="Configuringclients"><title>Configuring clients</title>
+
+<para>Each client has its own configuration section in <command>peep.conf</command>. The section is denoted by the name of the utility and defines which classes
+   the utility belongs to, as well as what port the clients run on. Additionally, each client section contains a configuration section specific to the
+   client. Client entries have the following syntax:
+
+
+<screen>
+client &lt;CLIENT_NAME&gt;
+  class &lt;CLASS_LIST&gt;
+  port &lt;PORT&gt;
+  config
+    # An event Name | ....
+    .
+    .
+    .
+  end config
+end client &lt;CLIENT_NAME&gt;
+</screen>
+
+<para>The classes and port specified in the configuration section apply to auto-discovery and leasing and only have any bearing when they are enabled. Multiple
+   classes can be specifed for a single client and the client will relay its data to all server that are members of its classes. The <command>config</command>
+   section contains configuration information specific to the utility. Most configuration syntaxes for utilities will probably want to begin with the
+   name of the event that the respective configuration line corresponds to. This is demonstrated in the following simple example of a <command>logparser</command>
+   configuration file:
+
+
+<screen>
+client logparser
+  class test
+  port 2000
+  config
+    # Name       Option-Letter    Location     Priority             Pattern
+    out-mail           O             0           1            "sendmail.*:.*from=<.*@(\w+\.)?eecs.tufts.edu>"
+    inc-mail           I            255          0            "sendmail.*:.*to=(\"|<.*@(\w+\.)?eecs.tufts.edu>).*stat=Sent"
+    login              L            128          0            "Login"
+  end config
+end client logparser
+</screen>
+
+</para>
+
+<para>Note that the entries in the <command>config</command> section begin with the event/state that respective line refers to. The provided Perl libraries will
+   automatically map those names to the corresponding internal mapping of the server. Thus, if you're designing a utility, you'll probably want to have 
+   the first part of each line in your <command>config</command> section map accordingly to the names in the event and state sections.
+
+</para>
+
+<para>Another thing to note is that this configuration applies to every instance of <command>logparser</command> around your network. Only certain parts of the 
+   configuration file are enabled within a given instance of <command>logparser</command> and that configuration information is decided by the option-letters
+   given on the command-line. Hence, the invocation of: <command>logparser -events=IO -logfile=/var/log/messages</command> would have LogParser only remember 
+   the configuration entries for <command>out-mail</command> and <command>inc-mail</command> and forget about <command>login</command>.
+
+</para>
+
+</sect1>
+
+<sect1 id="Anexampleconfiguration"><title>An example configuration</title>
+
+<para>You have seen the configuration file in bits and pieces in other sections. This section features one of the configuration file I use for testing on my
+   home machine in its entirety.
+
+<emphasis>Contents of peep.conf:</emphasis>
+
+
+<screen>
+#Peep (the network auralizer) - Main configuration file
+
+# This is for my subnet at home
+class home
+  broadcast 10.0.0.255:2000
+  server darktower:2001
+end class home
+
+client logparser
+  class home
+  port 2000
+  config
+    default
+      events  IOLlB
+      logfile /var/log/messages,/var/log/syslog
+    end default
+    events
+      # All patterns matched are done using Perl/awk matching syntax
+      # Commented lines are ones that BEGIN with a '#'
+      # Reference letters are used for the default section as well as
+      # the command line options -events and -logfile.
+      #
+      # Name      Reference-Letter    Location     Priority             Pattern
+      #
+      out-mail           O             0           1            "sendmail.*:.*from=&lt;.*@(\w+\.)?darkened.net&gt;"
+      inc-mail           I            255          0            "sendmail.*:.*to=(\"|&lt;.*@(\w+\.)?darkened.net&gt;).*stat=Sent"
+      login              L            128          0            "Login"
+      logout             l            128          0            "Logout"
+      #ssh-logins        S            128          2            "sshd.*Connection from"
+      bad-query          Q            128          3            "unapproved query"
+      su                 U            128         255           "(su.*root)|(su: SU)"
+      badsu              B            128         255           "BADSU"
+      #lowspace          L            128          4            "NOQUEUE: low on space"
+      #rsh-stuff         R            128          5            "in\.r(exec|sh|login)d"
+      #telnetd           T            128          6            "in\.telnetd"
+    end events
+  end config
+end client logparser
+
+client sysmonitor
+  class home
+  port 1999
+  config
+    # You can figure out what options these correspond to by doing a Uptime -help
+    sleep      60         # Number of seconds to sleep
+    loadsound  loadavg    # The sound to use when playing a load sound
+    userssound users      # The sound to use for number of users
+    maxload    2.5        # The initial value to consider maximum load
+    maxusers   200        # The initial value to consider a lot of users
+    loadloc    128        # Stereo location for load sounds
+    usersloc   128        # Stereo location for user sounds
+  end config
+end client sysmonitor
+
+events
+#Event Type      |          Path to Sound File           | # of sounds to load
+inc-mail     sounds/wetlands/coupled/whistle-01.*          1
+login        sounds/wetlands/events/sigh.*                 1
+out-mail     sounds/wetlands/coupled/whistle-02.*          1
+logout       sounds/wetlands/events/croak.*                3
+su           sounds/wetlands/events/light-chirps-04.*      1
+bad-query    sounds/wetlands/events/thrush-01.*            1
+badsu        sounds/wetlands/events/metallic.*             1
+ping         sounds/wetlands/heartbeats/cricket-chirp-01.* 1
+end events
+
+states
+#Event Type    |       Path to Sound File                | # of sounds to load |  Fade between time
+loadavg           sounds/wetlands/states/water-01.*   8                 0.7
+users             sounds/wetlands/states/rain-01.*    1                 1.5
+something         sounds/wetlands/states/leaves.*     4                 0.7
+end states
+</screen>
+
+
+<emphasis>End of contents of peep.conf</emphasis>
+
+<para>The sounds provided in this example are a good indication of the variety of sounds in the respository. I suggest messing around with all the sounds
+   and <command>KeyTest</command> to find the combination that's right for you.
+
+</para>
+
+</sect1>
+
+<chapter id="Utilities"><title>Utilities</title>
+
+<para>The Utilities section has moved!</>
+
+<para>The documentation for the utilties has now been moved to <ulink url="peep-client.html">peep-client.html</ulink>, as well as being embedded in the code
+   in perldoc format. To see the latest documentation, type <command>perldoc &lt;library name&gt; </command> or <command>perldoc &lt;client&gt;</command>. The
+   libraries are now installed via the usual CPAN format. Please see the above link for more information.
+
+</para>
+
+
+
+<chapter id="DevelopersGuide"><title>Developer's Guide</title>
+
+<para>This section is intended for developers or potential developers that want to become familiar with the internals of Peep (How it works, how
+   the code is arranged, etc.). If you're looking to get involved in the project, this is the section to read. This section is current as of
+   the major code rewrite for version 0.4.0.
+
+</para>
+
+
+
+<sect1 id="Howtocontribute"><title>How to contribute</title>
+
+<para>Probably the best way to begin getting involved with the project
+   is to join the mailing list at <ulink url="mailto:peep-develop@lists.sourceforge.net">
+   peep-develop@lists.sourceforge.net</ulink> and begin posting your suggestions/comments. If you have any patches that you'd like to submit or would
+   like to get involved developing code, please send email my way at <ulink url="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</ulink>.
+
+</para>
+
+<para>If you'd like to report some bugs, please use the bug tracking
+   utility on the sourceforge site at <ulink url="http://www.sourceforge.net/projects/peep/">
+   http://www.sourceforge.net/projects/peep/</>. That way we can fix your bugs for future releases.
+
+</para>
+
+<para>Also, if you'd like to contribute to the maintenance of documentation, have suggestions or ideas, I recommend sending them through the mailing list
+   or posted them in the public forms found on the Sourceforge page.
+
+</para>
+
+<para>One last thing: if you're interested in writing/providing code, I do use a simple naming convention in the C code. That convention is as follows:
+
+
+<screen>
+Global variables: Starts with caps, delimited with '_'. Ex: Snds_Per_State or Snds
+Local variables:  All lowercase, delimeted with '_'.    Ex: var_foo or var
+Functions names:  Starts with caps, words combined.     Ex: EnginePoll or Enqueue
+</screen>
+
+
+</sect1>
+
+<sect1 id="OverviewofPeepsinternals"><title>Overview of Peep's internals</title>
+
+<para>The inner workings of <command>peepd</command> are based upon the interactions of three execution threads: the server, the sound engine, and the mixer. The
+   server part handles all communications, including auto-discovery and keeping track of client leases. Upon receipt of an event, the server places the
+   event into a queue to be processed by the sound engine. The engine works closely in conjunction with the mixer to keep track of the priority of
+   incoming and currently playing sounds. The engine also tries to find the best available mixing channel on which to play the incoming events and informs
+   the mixer of the necessary parameters to properly represent the information. Should a suitable mixing channel not be found, the engine will place the
+   events into a priority queue, ensuring that the mixer will play the most important events as soon as mixing channels free up. The mixer performs the
+   processing necessary to produce Peep's output. This process involves scaling each sound's volume, as well as fading between state sounds. The mixer
+   must also check the engine's event queue and ensure that queued, older events have priority as soon as mixing channels free up.
+
+<emphasis>* Note: much has changed since 0.3.8. Much of the server code has been rewritten and reorganized. I suggest rereading this documentation
+         to get yourself up to speed.</emphasis>
+
+</para>
+
+<para>
+
+
+
+
+ <inlinegraphic fileref="./peep-internals.gif"></>
+
+
+
+</para>
+
+<para>
+
+</para>
+
+<para>Each file in Peep's source code has the following functions:
+
+
+<itemizedlist>
+<listitem><para>
+<emphasis>AlsaSound.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+
+
+<itemizedlist>
+<listitem><para>
+Contains the code for interfacing with the alsa libraries. This code works with ALSA 0.4.x, which is antiquated.
+	I was going to update the code for 0.5.x but ALSA had no documentaion and when I emailed one of the developer's, he
+	just told me to wait for 0.6.x (even though 0.5.x has been shipping with the newer kernels).So this is on hold for now.</para></listitem>
+</itemizedlist>
+
+
+<itemizedlist>
+<listitem><para>
+<emphasis>Debug.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+
+
+<itemizedlist>
+<listitem><para>
+Debugging routines as well as the assert macro for assertion debugging. The code here is fairly self-explanitory. </para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Debug.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains all the definitions of the different debugging levels. 8 different debugging flags are defined here as well as
+	five different debugging levels, which are a combination of those flags. The header contains a description of each.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>DeviceSound.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains code for interfacing with <command>/dev/audio</command> and provides an abstraction for writing raw pcm data to the device
+	driver. This is one of the sound "modules" provided.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Engine.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains the sound engine that determines which events play where in the mixer datastructure. If no channel is found, the
+	event is enqueued in the Engine queue for later playback and time stamped. The algorithm is pretty detailed in the comments. Note
+	that all uses of the Intelli_Map array are commented out. The array was part of a feature that is now considered obsolete.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Engine.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains the definitions for Engine.c but <emphasis>also</emphasis> contains the definition of an Event, with a description of what each field is.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>EngineQueue.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains the queuing structure between the events received by the server, waiting to be processed by the engine thread.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>EngineQueue.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Definitions for the queue</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Main.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+This file now only contains option parsing code, as well as the initialization routines. It also contains a couple of subroutines that invoke
+	the functions in the other modules when threading.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Main.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Just definitions for stuff in Main.h. Also contains some defines for some default paths to files, etc.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>MixerQueue.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+ Used to be in VoiceMixer.c and serves as the window for holding events that could not be played when received. The events are put here by
+	the engine and time stamped to be later played when a mixing channel frees up.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>MixerQueue.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Definitions for the mixer queue</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Parser.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains all the parsing code. Some people find this parser a little cryptic compared to its Perl friend. Perhaps one day we'll rewrite
+	this in flex, bison, or whatever. But right now, we're adopting the "if it ain't broke, don't fix it" attitude.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Parser.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains definitions for the parser code</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Playback.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains all the code for recording events and performing playback. The playback code hooks into the engine code in an if statement that
+	decides whether or not the event needs to be recorded/is ready for playback.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Playback.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Definitions for the playback code, including the definition of the playback file header.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Server.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+The server thread. Receives packets from clients and maintains all of the auto-discovery and leasing stuff.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Server.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains the definition of a generic packet for events and auto-discovery/leasing. Also contains some protocol constants.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Sound.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+General sound header that provides an the definitions of the abstractions for the sound modules.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>Thread.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Wraps POSIX threading code into simple functions.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>VoiceMixer.c</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Contains all of the mixer functionality, mixing sounds together, fading between sounds, panning, etc. Used to contain the code that is now
+	in MixerQueue.c.</para></listitem>
+
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+<emphasis>VoiceMixer.h</emphasis>
+	</para></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem><para>
+Definitions for the voicemixer.</para></listitem>
+
+</itemizedlist>
+
+
+</para>
+
+<para>The next few sections aim to provide a general idea of how the code is structured and make an introduction into the project easier. These sections will
+   probably need to be refined over time, with detail added, so if you have any suggestions or pieces of crucial information you felt were missing, please
+   send suggestions!
+
+</para>
+
+</sect1>
+
+<sect1 id="Theserverpart"><title>The server part</title>
+
+<para>There are three main data structures involved in the server code:
+
+
+<screen>
+/* Peep leasing is a very low resolution leasing and is not meant to be
+ * used for long periods of time. After lease time has expired, the·
+ * information associated with the broadcast should be considered
+ * obsolete·
+ */·
+struct lease {
+  unsigned char min;
+  unsigned char sec;
+};
+
+/* Protocol for internet transmissions */
+typedef struct {
+  unsigned char majorver;               /* major protocol version */
+  unsigned char minorver;               /* minor protocol version */
+  unsigned char type;                   /* type of packet */
+  unsigned char reserved;               /* reserved for future use */
+  union {
+    struct {
+      struct lease lease;
+      char infostring[PROT_STRLEN];
+    } bc_server;                        /* For server broadcasts */
+    struct {
+      struct lease lease;
+    } still_alive;                      /* For renewing leases */
+    Event event;                        /* Client event */
+    char infostring[PROT_STRLEN];       /* class string from client bc's */
+  } msg;
+} Packet;
+
+/* The entry in the linked list database of active clients */
+struct hostlist {
+  struct in_addr host;      /* The ip address of the active host */
+  unsigned int port;        /* The port to address the host with */
+  struct timeval expired;   /* The time remaining at which this has expired */
+  struct hostlist *nextent; /* The next entry in the list */
+};
+</screen>
+
+<para>When starting up, the server constructs a broadcast packet, using the <command>bc_server</command> field. It constructs a string of classes from configuration
+   information found in <command>peep.conf</command> and delimites them with a "!". It also constructs a lease time which is based on the constants set in
+   <command>Server.c</command>. There are two lease constants: one set tells the client when to consider the server non-functional, and the other when the
+   server should send renew its lease with the clients.
+
+</para>
+
+<para>Since servers and clients broadcast only once upon startup, the server maintains a list of clients using the <command>hostlist</command> structure. After
+   the server starts up and broadcasts its existence and the appropriate clients respond that they're alive, the server adds the clients
+   into the host list. Similarly, when the clients start up, they are given a lease time and added into the hostlist. The server also records the
+   time when the client entry will expire. If the server doesn't hear from the client after the lease time has expired, it removes the entry from
+   the hostlist. All communications after the initial broadcast are direct and the hostlist serves as the list of hosts the server must send lease
+   renewal information to. When renewing leases, the <command>still_alive</command> field is used. An alarm is also scheduled every wakeup period, and the
+   alarm handler examines the hostlist, purges any expired entries, and sends off lease renewal packets to the remaining entries.
+
+</para>
+
+<para>Finally, the <command>event</command> field of the packet structure is for the actual receipt of packets form clients and the <command>infostring</command> string
+   is used for the receipt of client broadcasts. The server identifies the type of packet it is received based on the type field and the constants defined
+   in the server header. Regular events are placed into the sound engine queue, to be processed by the sound engine and assigned to a mixer channel.
+
+</para>
+
+</sect1>
+
+<sect1 id="Thesoundengine"><title>The sound engine</title>
+
+<para>The main data structure involved with the sound engine are (taken from Engine.c and Engine.h):
+
+
+<screen>
+typedef struct {
+  unsigned char type;          /* State or single event? */
+  unsigned char sound;         /* Sound to map to */
+  unsigned char location;      /* Stereo location in terms of left channel
+                                  Right channel is simple 255 - location */
+  unsigned char priority;      /* Priority of the event */
+  unsigned char volume;        /* Playback volume  - Have to divide by 255 */
+  unsigned char dither;        /* Adjustable parameter for sound dithering.
+                                  2 meanings -
+                                   1: Applies to states, sets the fade-in time
+                                      when mixing between state sounds
+                                   2: Applies delay to handle logs which update
+                                      in large spurts at set intervals */
+  long mix_in_time;            /* Time at which an event (if it) was enqueued */
+} Event;
+
+/* Create an event sound map */
+unsigned int No_Mappings;         /* The size of the Map array */
+short ***Samples;                 /* Array of Samples loaded into memory */
+unsigned int **Sample_Lengths;    /* Lengths of the samples */
+unsigned int *No_Event_Snds;      /* The number of event sounds associated with an event */
+
+/* Engine Data Structure (Calloc'd to half the number of channels) */
+
+double *Intelli_Map; /* Mappings of minimal playtimes (Currently considered obsolete) */
+double *Startt;      /* Arry of START times for each chan */
+long *Priorit;       /* Arry of priorities of each scheduled event */
+double *Minendt;     /* Arry of Min playtimes for intelligibility */
+</screen>
+
+<para>The sound engine's main purpose is to assign incoming events appropriate channels in the voice mixer. For state events, this simply means making the
+   appropriate changes in volume and stereo position of the voice mixer's state data structures. For singular events, the sound engine undergoes an
+   algorithm to calculate the best aviable channel based on what's availabe, and the priority of the sound. If no channel is available, the event is
+   put into a priority queue (literally based on event priority), to be played by the voice mixer as soon as a channel frees up.
+
+</para>
+
+<para>The first data structure defined in the sound engine header is the event format. This is the same format that clients use to send events to the server.
+   One thing to note is that clients do not send the <command>mix_in_time</command> field... only the first six bytes. The <command>mix_in_time</command> field is set
+   internally, so the sound engine and voicemixer can keep track of when the sound began playing.
+
+</para>
+
+<para>The event sound map data structure is filled out when parsing <command>peep.conf</command> and loading sound files into memory. This particular data structure
+   only contains singular event sounds, as state sounds are loaded directly into their appropriate data structures in the voice mixer. When the sound
+   engine receives a packet to play a singular event, it calls the <command>MixInSound</command> function to tell the mixer to add one of the sounds from the
+   sound map data structure into its mixing channels.
+
+</para>
+
+<para>Finally, the engine data structure consists of arrays of internal information about the contents of the voice mixer's data structures. The engine records
+   the priority of each event currently playing, as well as the start time of the event and will tell the mixer to interrupt a low priority sound if the
+   mixer's channels are full and a higher priority event comes in. The <command>Intelli_Map</command> part of the data structure has been left in the code but
+   is not currently used. The idea was to have some sort of "intelligeable time", which meant that if a sound had played for that time length, you could
+   tell what it was (it was intelligeable) and it could be interrupted if necessary. Right now, all <command>Intelli_Map</command> values are set to MAX_DOUBLE,
+   which disables this features. It is possible this feature could be re-enabled in the future if some one has need for it.
+
+</para>
+
+<para>The <command>MixerQueue.c</command> file also includes the priority queue code, which begins filling up with events based on event priority if all channels
+   are taken and uninterruptable. The voice mixer looks at this queue directly as soon as channels free up.
+
+</para>
+
+</sect1>
+
+<sect1 id="Thevoicemixer"><title>The voice mixer</title>
+
+<para>The mixer contains the following data structures in <command>VoiceMixer.c</command>:
+
+
+<screen>
+/* Mixer Event Data Structure */
+short **Sound_Bufs;          /* Pointers to the arrays of sounds to be played */
+unsigned int *Buf_Length;    /* Lengths of the Sound arrays */
+unsigned int *Sound_Pos;     /* The current position in a given sound array */
+unsigned char *Stereo_Left;  /* The array of stereo locations for the sound */
+unsigned int No_Event_Chans; /* The Number of Channels for an event
+                              * Remaining after State calculation */
+
+/* Structure for mixing together dynamic event sounds */
+double *Dynamic_Mult;        /* The dynamic multipliers to control sound volume */
+unsigned int No_Cur_Voices;  /* The number of current voices playing */
+
+/* Mixer State Data Structure */
+short ***State_Sounds;
+unsigned int *Snds_per_State;    /* The number of sounds used for 1 state */
+unsigned int **State_Snd_Length; /* The length of the sounds for a given state sound */
+double *State_Volumes;           /* Volume mul 0.0-1.0 */
+unsigned char *State_Stereo;     /* The stereo location of the state sounds */
+unsigned int *Cur_Snd;           /* Current sound playing for a given state */
+unsigned int *Cur_Snd_Pos;       /* Sound position within a given sound */
+unsigned int No_State_Chans;     /* Calculated as 1/8 of the number of voices */
+unsigned int No_Actual_States;   /* The total number of state sounds actually loaded */
+
+/* Add on data structure for fade out and in */
+double *State_Fade;          /* The time remaining at which to begin fading */
+unsigned int *Next_Snd;      /* The next random sound to play */
+unsigned int *Next_Snd_Pos;  /* The position in the next random sound */
+</screen>
+
+<para>The voice mixer doesn't just mix, but does all sorts of stuff in addition to mixing. These things include picking the next random to play for a given
+   state sound, fading old state sounds into the new, checking if there are events waiting in the priority queue after a mixed event finishes playing,
+   and calculating event volumes dynamically. The voicemixer also figures out how many channels get alloted to events and states. The default ratio to
+   use is that state mixing channels comprise of 1/8 of the total number of voices. For 32 voices, that means that 28 events can play simultaneously and
+   4 channels are reserved for state sounds. That ratio can be changed by changing a constant in the voice mixer header. Another thing the mixer does is
+   to ensure that the total number of voices is a power of 2. It will round up to the nearest power of 2, so running <command>peepd -V28</command> is the same
+   as running <command>peepd -V32</command>. <command>peepd</command> defaults to 32 voices.
+
+</para>
+
+<para>The mixer event data structure is a group of arrays that specify what sound is on a given event channel, what offset we're currently at in that sound,
+   the sound's stereo location, and the length of the sound. Mixing is done by calculated a given sound's stereo location and then summing all the sounds
+   together. To avoid clipping, dynamic mixing scales the volumes of the sounds. It does this by keeping track of what multipliers it's currenlty using
+   and the number of voices currenlty playing. When a new sound comes in, it sums all of the dynamic multipliers (the max possible is 1.0) and determines
+   how much space it has to play with and calculates a new volume multiplier. The algorithm used to calculate dynamic volume results in the first sounds
+   arriving at the server in a short burst of many sounds sound louder than the trailing sounds, but that volumes even out quickly with a continuous
+   stream of events. The <command>--with-static-volume</command> option to configure doesn't use dynamic volume and simply divides all sound volumes by the
+   number of voices used, to avoid any possible clipping. This is sort of a legacy option in the code but I suppose it could offer some sort of performance
+   increase for really slow computers.
+
+</para>
+
+<para>The state data structures are a little more complicated. Not only does the server need to keep track of what sound it is currenlty playing, but it
+   also needs to keep track of what the next sound is going to be so that it can fade the current sound into the next one. State sounds are given in
+   a sequence of sound segments. Since state sounds tend to be continuous background noises, the segments are mixed together in random order to
+   create a <emphasis>random</emphasis> sounding result. The sound engine modifies the volume and stereo location parts of the data structure directly and the mixer
+   calculates the volume and stereo location of the state sound as its playing. Finally, the fading data structure keeps track of what the next sound
+   to fade into is and what offset the mixer is currently at in the fading process.
+
+</para>
+
+<para>Some other stuff to note about the mixer is that it aims to feed enough sound data into the audio buffers on the sound card so that it can sleep for a
+   bit before continuing calculations. Here, there was a tradeoff between response time and performance. The "chunk size" used in this case is roughly
+   a 1/2 second of sound. The mixer sleeps for about half of that and then begins calculating again. The idea is to always keep the audio buffer on the
+   sound card while maximizing sleep time. The current compromise works alright but could be tweaked...
+
+</para>
+
+<para>Finally, the voice mixer interfaces with actual sound devices through an abstraction layer, which is introduced in the next section.
+
+</para>
+
+</sect1>
+
+<sect1 id="Theplaybackcode"><title>The playback code</title>
+
+<para>Events are recorded into a "round-robin" within the playback file. The structure for the playback file is (excuse my cheesy ansi art):
+
+</para>
+
+<screen>
+ Header (struct playback_h in Playback.h always first
+            sizeof(struct playback_h) bytes of file)
+           |
+           |
+       Event loop (Number of events set by    ----|
+                   a #define in Playback.h)       |
+           |                                      |
+           ----------------------------------------
+</screen>
+
+<para>The events are recorded as they are fed to the sound engine (in <command>Engine.c</command>), and are time stamped write before they are written to the
+   event log, using the mix_in_time field of the Event structure. One thing to note is that the structure contains a start position field
+   which is set and written out to the file in the header section that specifies where the round-robin in the file begins. For robustness,
+   if the header isn't written out upon shutdown (for whatever reason), the playback code can search through the file and determine where the
+   round-robin begins based on the mix_in_times. When <command>peepd</command> is started in server mode, rather than starting the server thread, a playback
+   thread starts and reads events in the file and feeds them to the Engine thread just as though they were received by the server thread.
+
+</para>
+
+</sect1>
+
+<sect1 id="Thesoundmodules"><title>The sound modules</title>
+
+<para>The sound modules are basically a set of function calls and constants that abstract the actual sound device underneath. The two types of sound modules
+   currently implemented are <command>/dev/audio</command> support and ALSA support(for 0.4.x). Constants for those device drivers are abstracted via the
+   definition of the constants in the <command>Sound.h</command> header:
+
+
+<screen>
+AU_SOUND_FORMAT
+SIGNED_16_BIT
+SOUND_WRONLY
+SOUND_RDONLY
+SOUND_RDWR
+</screen>
+
+<para>The <command>Sound.h</command> header also defines other data structures capabable of describing the audio hardware. However, these structures cannot be
+   filled out with <command>/dev/audio</command> support, which is the main thrust of support at the moment, and so are not really taken advantage of. The
+   main functions to implement to create a sound modules are:
+
+
+<screen>
+void *InitSoundCard(void *card, int device, int mode);
+boolean SetSoundFormat(void *handle, unsigned int format_type,
+                       unsigned int sample_rate, unsigned int channels,
+                       unsigned int port);
+ssize_t PlaySoundChunk(void *handle, char *buffer, unsigned long size);
+void CloseSoundDevice(void *handle);
+</screen>
+
+<para>These have pretty obvious purposes. The current mixing scheme does everything in software. While this is portable across all hardware, it means that
+   a lot of processing is CPU bound, rather than offloaded to the hardware. The two other functions defined in <command>Sound.h</command> could be used to
+   figure out whatsort of capabilities the hardware offers and to take advantage of hardware directly in future versions.
+
+</para>
+
+<para>The ALSA code won't be updated until things at ALSA calm down. RIght now they're moving forward at incredible speed in terms of the drivers but
+   the developer libraries are rather rocky. I've been told by an ALSA developer to hold off or rather just wait until they hit v0.6.x or so.
+
+</para>
+
+</sect1>
+
+<sect1 id="WritingclientswiththeprovidedPerlmodules"><title>Writing clients with the provided Perl modules</title>
+<para>
+This section has now moved away from the general documentation into its own section. In addition, most of this documentation is now
+    in perldoc format and can be viewed by perldoc'ing the client or library in question. Please see <ulink url="peep-client.html">peep-client.html</ulink>
+    for more information. 
+</>
+</sect1>
+
+<sect1 id="MakingsoundsforPeep"><title>Making sounds for Peep</title>
+
+<para>If you're planning on making sounds for Peep, I suggest looking
+   into a program called Goldwave for sound processing: <ulink url="http://www.goldwave.com">
+   goldwave</ulink>. If you're processing event sounds, which tend to be higher in pitch by nature, I suggest running a high-pass filter at 1 Khz, to get rid
+   of a lot of the low end noise. Finally, please remember to maximize your sounds so that they have maximum volume.
+
+</para>
+
+<para>The sound format used by Peep is PCM raw signed-16 bit stereo at 44100 Khz (CD-quality), which has the extension .snd. The extensions just need to be
+   changed to follow the conventional format of .01-.99.
+
+</para>
+
+<para>Lastly, the sound repository is now organized in terms of themes. The convention for the hierarchical layout is:
+
+
+<screen>&lt;theme&gt; =&gt; '/' =&gt; &lt;category&gt; =&gt; '/' =&gt; &lt;filename&gt;</screen>
+
+</para>
+
+<para>Within each category, there is an <command>__INDEX__</command> file that contains descriptions of each of the sound files in XML. The structure of the XML
+is:
+
+
+<screen>
+For a single event (length and segments are optional):
+
+&lt;event&gt;
+	&lt;name&gt; Name goes here &lt;/name&gt;
+	&lt;length&gt; length in "# sec" &lt;/length&gt;
+	&lt;segments&gt; How many sound files for the event &lt;/segments&gt;
+	&lt;suggested&gt;
+		The kind of network event to use the sound for.
+	&lt;/suggested&gt;
+	&lt;description&gt;
+		A description of the event.
+	&lt;/description&gt;
+&lt;/event&gt;
+ 
+For coupled events:
+&lt;couple&gt;
+	&lt;primary&gt; The primary coupled sound &lt;/primary&gt;
+	&lt;secondary&gt; The second, complementary sound &lt;/secondary&gt;
+	&lt;description&gt;
+		A description of the event.
+	&lt;/description&gt;
+&lt;/couple&gt;
+ 
+For state events:
+&lt;state&gt;
+	&lt;name&gt; Name goes here &lt;/name&gt;
+	&lt;segments&gt; Number of sound segments to load for a state &lt;/segments&gt;
+	&lt;description&gt;
+		A description of the event.
+	&lt;/description&gt;
+&lt;/state&gt;
+ 
+For a heartbeat sound:
+&lt;heartbeat&gt;
+	... Same internal structure as an event
+&lt;/heartbeat&gt;
+</screen>
+
+<para>The idea will be to eventually move to a sound browser that will allow users to experiment and play with sounds and the different sound themes.
+   The theme that's currently included is a "wetlands" venue.  If you'd like to contribute a sound theme to Peep. just tar.gz it all
+   up and send it my way and I'll make it available: <ulink url="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</ulink>.
+
+</para>
+
+</sect1>
+
+<chapter id="Troubleshooting"><title>Troubleshooting</title>
+
+<para>This section aims at providing solutions for common problems. This section will expand as I get feedback from you and figure out what those common
+   problems are =)
+
+</para>
+
+
+
+<sect1 id="ProblemscompilingPeep"><title>Problems compiling Peep</title>
+
+<para>Current known problems compiling Peep are with the ALSA library. Unfortunately, when I wrote the ALSA sound module for Peep, that was back when ALSA
+   was at version 0.4.0 or so. Maybe early. If you're an ALSA user and are having trouble compiling Peep, I suggest you compile with 
+   <command>/dev/audio</command> support for now. To do this, just edit your <command>config.h</command> file, found after running a <command>./configure</command> in
+   the top level source directory and undef __USING_ALSA_DRIVER__ and define __USING_DEVICE_DRIVER__. This is a problem as of versions 0.3.6 and lower.
+
+</para>
+
+</sect1>
+
+<sect1 id="Couldntassembleidentifierstring"><title>Couldn't assemble identifier string</title>
+
+<para><command>peepd</command> currently has some problems recognizing it's hostname within peep.conf. If this happens to you, I suggest doing a
+   <command>uname -n</command> to see what peepd thinks your machine is called, and then using that machine name within peep.conf.
+
+</para>
+
+</sect1>
+
+
+</chapter>
+</book>
+

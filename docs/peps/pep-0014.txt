@@ -1,0 +1,77 @@
+PEP: 0014
+Title: Changes to the Peep protocol for 0.5.0
+Version: $Revision; 1.1$
+Author: mgilfix@eecs.tufts.edu (Michael Gilfix),
+        collin.starkweather@colorado.edu (Collin Starkweather)
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Abstract
+
+  For tracking purposes, it would be valuable if clients could send
+  notification strings with their packets. The notification strings could be
+  used to print logs on the server side of events that have been triggered,
+  etc.
+
+  Make mention of the new flags string for telling the mixer to apply
+  effects as well as any other new effects that will be added.
+
+   In addition to the passing of notification strings, it has been
+   suggested that some things may not be appropriate to pass clear
+   text.  I have worked with Perl's GnuPG::Interface module in the
+   past, and am confident that optional encryption of the strings
+   would not be overly problematic (though there may be a nontrivial
+   documentation effort due to the nontrivial nature of GPG).
+
+   However, I think it is important to take things in stages, and
+   would like this PEP to address cleartext strings only.  After (er,
+   if) this PEP is implemented, a follow-up PEP will be written to
+   address the need for encryption.
+
+   Thus, with the current incarnation, effort to be taken to keep the
+   client-server interaction as innocuous as possible.
+
+Specification
+
+   XML would be an excellent format for the notification strings, since
+   they need not be human-readable and will probably contain
+   heirarchically organized information.
+
+   Some information that would be useful to include in the string:
+
+    1. The client IP or hostname from which the string was sent.
+    2. The name of the client which sent the string (e.g., logparser).
+    3. The date and time (on the client) at which the event was
+       triggered.
+    4. A state associated with the event (e.g., OK, warning, error,
+       critical)
+    5. The descriptor of the event (e.g., inc-qmail).
+    6. Any additional data (e.g., the log entry that triggered a
+       logparser event).
+
+   Example
+   -------
+
+   A packet string would look like the following:
+
+      <?xml version='1.0' encoding='UTF-8'>
+
+      <notice>
+         <event>
+            <host>www6.foo.org</host>
+            <client>logparser</client>
+            <date>fri may 18 18:28:59 MDT 2001</date>
+            <description>inc-sendmail</description>
+            <state>OK</state>
+            <data>May 18 04:18:48 foo sendmail[24566]: to=bogususer, stat=Sent</data>
+         </event>
+      </notice>
+
+Copyright
+
+  Issued under the Gnu General Public License.
+
+  Michael Gilfix <mgilfix@eecs.tufts.edu> Copyright (C) 2001
+

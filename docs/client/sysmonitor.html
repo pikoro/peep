@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<TITLE>sysmonitor</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;sysmonitor</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#commandline options">COMMAND-LINE OPTIONS</A></LI>
+	<LI><A HREF="#examples">EXAMPLES</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Sysmonitor - Client application for Peep: The Network Auralizer.</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<P>Sysmonitor is a client for Peep which monitors system performance
+statistics such as uptime, load, memory usage, etc. and translates
+them into a Peep ``state''.</P>
+<P>States are broadcast to the Peep server, peepd, which then translates
+the state into an aural signal such as running water or a chirping
+bird.</P>
+<P>This application is a part of Peep and requires that the Peep Perl
+modules have been installed.</P>
+<P>
+<HR>
+<H1><A NAME="commandline options">COMMAND-LINE OPTIONS</A></H1>
+<P>system supports the following command-line options:</P>
+<PRE>
+    --loadsound=[STRING]  
+    --usersound=[STRING]
+    --loadloc=[STRING]
+    --userloc=[STRING]
+    --maxload=[NUMBER]
+    --maxuser=[NUMBER]
+    --sleep=[NUMBER]      The amount of time to sleep (in seconds) between iterations
+                          of checking system functions</PRE>
+<P>In addition, the following options are common to all Peep clients:</P>
+<PRE>
+    --config=[PATH]       Path to the configuration file to use
+    --logfile=[PATH]      The path of the logfiles to scan, delimited by ','
+    --debug=[NUMBER]      Enable debugging. (Def:  0)
+    --nodaemon            Do not run in daemon mode
+    --pidfile=[PATH]      The file to write the pid out to (Def: /var/run/logparser.pid)
+    --output=[PATH]       The file to log logparser output to (Def: stderr)
+    --noautodiscovery     Disables autodiscovery and enables the server and port options
+    --server=[HOST]       The host (or IP address) to connect to
+    --port=[PORT NO]      The port to use
+    --silent              Does not produce output.  To eliminate all output,
+                          either the debug option should be set to 0 or
+                          an output file should be specified.
+    --help                Prints a simple help message</PRE>
+<P>
+<HR>
+<H1><A NAME="examples">EXAMPLES</A></H1>
+<P>sysmonitor</P>
+<P>sysmonitor --nodaemon --noautodiscovery --server=localhost --port=2001</P>
+<P>sysmonitor --nodaemon --debug=7 --config=$HOME/peep.conf</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix &lt;<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>&gt; Copyright (C) 2000</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), Net::Peep::Client, Net::Peep::Client::Sysmonitor,
+peepd.</P>
+<P><A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;sysmonitor</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

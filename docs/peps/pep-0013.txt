@@ -1,0 +1,47 @@
+PEP: 0013
+Title: Port of clients to windows
+Version: $Revision; 1.1$
+Author: collin.starkweather@colorado.edu (Collin Starkweather)
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Abstract
+
+  Perl being an ideal cross-platform language, the idea has been
+  advanced to generate PPD files, used by ActiveStates PPM (Perl
+  Package Manager) to generate clients suitable for Windows
+  installations.
+
+  The server itself would be difficult to port, and, in my opinion,
+  would not bring in a much wider audience. However, most system
+  administrators need to monitor combinations of Windows and Unix
+  Machines.
+
+  Given the ease with which most of the clients can be ported to
+  Windows, in my opinion, it would be a worthwhile endeavor. However,
+  some volunteers would be nice for testing purposes, given that your
+  humble author does not have Windows installed on any of his 5
+  machines.
+
+  Likewise, given the difficulty of porting the server to Windows and
+  my own personal preferences, I would question whether there would be
+  sufficient interest or motivation to port the server to Windows.
+
+Specification
+
+  Some clients, such as sysmonitor and webmonitor, rely on system calls
+  that rely on executables that are not bundled with Windows.  Thus,
+  not all of the clients may be readily convertible to Windows.
+
+  Otherwise, initial research suggests that a PPD distribution can be
+  created by ExtUtils::MakeMaker without too much trouble.
+
+Copyright
+
+  Issued under the Gnu General Public License.
+
+  Michael Gilfix <mgilfix@eecs.tufts.edu> Copyright (C) 2001
+
+

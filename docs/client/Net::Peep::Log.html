@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<TITLE>Net::Peep::Log</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Log</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<UL>
+
+		<LI><A HREF="#export">EXPORT</A></LI>
+		<LI><A HREF="#class attributes">CLASS ATTRIBUTES</A></LI>
+		<LI><A HREF="#public methods">PUBLIC METHODS</A></LI>
+	</UL>
+
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+	<LI><A HREF="#terms and conditions">TERMS AND CONDITIONS</A></LI>
+	<LI><A HREF="#change log">CHANGE LOG</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>Net::Peep::Log - Perl extension for client-side logging and debugging for
+Peep: The Network Auralizer.</P>
+<P>This module is a part of Peep.</P>
+<P>
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use Net::Peep::Log;
+  my $log = new Net::Peep::Log;</PRE>
+<PRE>
+  $log-&gt;log(&quot;Hello&quot;,&quot; World!&quot;);</PRE>
+<PRE>
+  $Net::Peep::Log::logfile = '/var/log/peep/client.log';
+  $Net::Peep::Log::debug = 3;</PRE>
+<PRE>
+  my $object = new Some::Object;
+  $log-&gt;mark(&quot;foomark&quot;);
+  $object-&gt;foo();
+  $log-&gt;log(&quot;The method foo took &quot;,$log-&gt;benchmark(&quot;foomark&quot;),&quot; seconds.&quot;);
+  $log-&gt;mark(&quot;barmark&quot;);
+  $object-&gt;bar();
+  $log-&gt;log(&quot;The method bar took &quot;,$log-&gt;benchmark(&quot;foomark&quot;),&quot; seconds and &quot;,
+            &quot;foo and bar took a total of &quot;,$log-&gt;benchmark(&quot;barmark&quot;));</PRE>
+<PRE>
+  $log-&gt;debug(1,&quot;This message will be logged in &quot;,
+                &quot;/var/log/peep/client.log&quot;);</PRE>
+<PRE>
+  $log-&gt;debug(4,&quot;This message will not be logged in &quot;,
+                &quot;/var/log/peep/client.log&quot;);</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>Net::Peep::Log provides methods for writing logging and debugging messages.</P>
+<P>Messages are written to the file defined by the class attribute
+$Net::Peep::Log::logfile.  If the attribute is not defined, messages are
+written to standard error.</P>
+<P>All messages are prepended with a syslog-style time stamp.</P>
+<P>Debugging messages are accompanied with an argument specifying the
+debugging level of the message.  The class attribute $Net::Peep::Log::debug
+defines the cutoff level for debugging messages to appear in the log.</P>
+<P>If the debugging level of a particular debugging message is compared
+with the global debugging level.  If it is less than or equal to the
+global debugging level, it is logged.  Otherwise, it is discarded.</P>
+<P>The default value of $Net::Peep::Log::debug is 0.</P>
+<P>This provides the coder with the ability to specify how much debugging
+output to include in client output by simply setting the
+$Net::Peep::Log::debug level.</P>
+<P>Generally accepted categories associated with various debugging levels
+are as follows:</P>
+<PRE>
+  0 - No debugging output
+  1 - Configuration debugging and output and command-line
+      option parsing
+  3 - General operational information
+  5 - Log parsing and rule (e.g., event) recognition
+  7 - Socket binding and client-server interaction
+  9 - The works.  Whoa Nelly.  Watch out.</PRE>
+<P>
+<H2><A NAME="export">EXPORT</A></H2>
+<P>None by default.</P>
+<P>
+<H2><A NAME="class attributes">CLASS ATTRIBUTES</A></H2>
+<PRE>
+  $Net::Peep::Log::VERSION - The CVS revision of this module.</PRE>
+<P>The following class attributes are optional:</P>
+<PRE>
+  $Net::Peep::Log::logfile
+  $Net::Peep::Log::debug - The debug level.  Default:  0.</PRE>
+<P>If no logfile is specified, log output is sent to STDOUT and debugging
+output is sent to STDERR.</P>
+<P>If a logfile is specified, both log output and debugging output are
+sent to the logfile.</P>
+<P>
+<H2><A NAME="public methods">PUBLIC METHODS</A></H2>
+<PRE>
+  new() - Net::Peep::Log constructor.</PRE>
+<PRE>
+  log($message1,$message2,...) - Prints a log message.  All log
+  messages are prepended with a syslog-style time stamp and appended
+  with a newline.</PRE>
+<PRE>
+  debug($debuglevel,$message1,$message2,...) - Prints a debugging
+  message.  All debugging message are prepended with a syslog-style
+  time stamp and appended with a newline.  Information regarding the
+  debug level is given above.</PRE>
+<PRE>
+  mark($identifier) - Starts marking time based on identifier
+  $identifier.  Prints a log message to that effect.</PRE>
+<PRE>
+  benchmark($identifier) - Evaluates the number of microseconds since
+  the mark corresponding to identifier $identifier was set and prints
+  a log message.  Returns the number of seconds accurate to the
+  microsecond.</PRE>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Collin Starkweather &lt;<A HREF="mailto:collin.starkweather@collinstarkweather.com">collin.starkweather@collinstarkweather.com</A>&gt;
+Copyright (C) 2001</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), peepd(1), Net::Peep::BC, Net::Peep::Parse, logparser,
+sysmonitor.</P>
+<P><A HREF="http://peep.sourceforge.net">http://peep.sourceforge.net</A></P>
+<P>
+<HR>
+<H1><A NAME="terms and conditions">TERMS AND CONDITIONS</A></H1>
+<P>You should have received a file COPYING containing license terms
+along with this program; if not, write to Michael Gilfix
+(<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>) for a copy.</P>
+<P>This version of Peep is open source; you can redistribute it and/or
+modify it under the terms listed in the file COPYING.</P>
+<P>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</P>
+<P>
+<HR>
+<H1><A NAME="change log">CHANGE LOG</A></H1>
+<P>$Log: Net::Peep::Log.html,v $
+<P>Revision 1.1  2001/04/23 10:19:14  starky
+<P>Commit in preparation for release 0.4.1.
+<P>
+<P>o Altered package namespace of Peep clients to Net::Peep
+<P>  at the suggestion of a CPAN administrator.
+<P>o Changed Peep::Client::Log to Net::Peep::Client::Logparser
+<P>  and Peep::Client::System to Net::Peep::Client::Sysmonitor
+<P>  for clarity.
+<P>o Made adjustments to documentation.
+<P>o Fixed miscellaneous bugs.
+<P>
+Revision 1.3  2001/03/31 07:51:35  mgilfix</P>
+<PRE>
+  Last major commit before the 0.4.0 release. All of the newly rewritten
+clients and libraries are now working and are nicely formatted. The server
+installation has been changed a bit so now peep.conf is generated from
+the template file during a configure - which brings us closer to having
+a work-out-of-the-box system.</PRE>
+<P>Revision 1.3  =head1 CHANGE LOG
+</P>
+<PRE>
+
+$Log: Net::Peep::Log.html,v $
+Revision 1.1  2001/04/23 10:19:14  starky
+Commit in preparation for release 0.4.1.
+
+o Altered package namespace of Peep clients to Net::Peep
+  at the suggestion of a CPAN administrator.
+o Changed Peep::Client::Log to Net::Peep::Client::Logparser
+  and Peep::Client::System to Net::Peep::Client::Sysmonitor
+  for clarity.
+o Made adjustments to documentation.
+o Fixed miscellaneous bugs.
+
+Revision 1.3  2001/03/31 07:51:35  mgilfix</PRE>
+<PRE>
+  Last major commit before the 0.4.0 release. All of the newly rewritten
+clients and libraries are now working and are nicely formatted. The server
+installation has been changed a bit so now peep.conf is generated from
+the template file during a configure - which brings us closer to having
+a work-out-of-the-box system.</PRE>
+<P>Revision 1.3  2001/03/31 02:17:00  mgilfix
+Made the final adjustments to for the 0.4.0 release so everything
+now works. Lots of changes here: autodiscovery works in every
+situation now (client up, server starts &amp; vice-versa), clients
+now shutdown elegantly with a SIGTERM or SIGINT and remove their
+pidfiles upon exit, broadcast and server definitions in the class
+definitions is now parsed correctly, the client libraries now
+parse the events so they can translate from names to internal
+numbers. There's probably some other changes in there but many
+were made :) Also reformatted all of the code, so it uses
+consistent indentation.</P>
+<P>Revision 1.2  2001/03/30 18:34:12  starky
+Adjusted documentation and made some modifications to Peep::BC to
+handle autodiscovery differently.  This is the last commit before the
+0.4.0 release.</P>
+<P>Revision 1.1  2001/03/28 00:33:59  starky
+Adding the Peep::Log module for the first time.  I can't believe I forgot
+to add this earlier.  Doh!</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;Net::Peep::Log</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>

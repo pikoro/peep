@@ -1,0 +1,170 @@
+PEP: 0015
+Title: Revamping the voicemixer for 0.5.0
+Version: $Revision; 1.1$
+Author: mgilfix@eecs.tufts.edu (Michael Gilfix)
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Note: This document is still a working draft.
+
+Abstract
+
+  This document contains the proposal for revamping the mixer for the next
+  major release. As the Peep server will essentially be rewritten for the
+  next major release, this proposal contains a substantial amount of detail,
+  as well as outline of all issues involved.
+
+  The subtopics covered in this abstract:
+
+    1. Investigating EsounD.
+    2. Revamping the mixer datastructures and making it more efficient.
+    3. More mixer features.
+
+
+Investigating EsounD
+
+  Because peepd makes use of /dev/audio continuously, several people
+  have requested that Peep include support for EsounD so that multiple
+  applications can use the audio device concurrently. One person has also
+  put forward the question as to why Peep uses its own mixer and why it
+  couldn't just use a mixer like EsounD ("Why not use something that does it
+  better?").
+
+  Well, after some investigation, I've reached the following conclusions:
+
+  On using EsounD as a mixer:
+
+    EsounD does not support the detail of mixing that Peep requires in its
+    API. In fact, the EsounD API is very limited and only provides code for
+    connecting and playing sounds on an EsounD mixer. Very little control
+    of the daemon is provided via the API.  In addition, the EsounD project
+    contains very little documentation, which complicates the issue.
+
+    Finally, my personal feeling is that it's a bad idea to depend on
+    another project for something that's a crucial core part of the Peep
+    infrastructure, unless that project provided massive gains. Both
+    projects have very different goals. EsounD doesn't do "mixing" better
+    than Peep, but rather solves another aspect of the problem. In fact,
+    the Peep mixer is a pretty good piece of software. It just needs to be
+    re-engineered and abstracted.
+
+  On providing support for Esound:
+
+    This is something I would like to include for the next upcoming release
+    as a sound module. While revising the device driver module as well as
+    the ALSA module, we could add an EsounD module that would use the esdlib
+    to connect to the EsounD server and mix in the Peep audio stream that
+    way.
+
+    This is the ideal paradigm: EsounD handles mixing for the system, as
+    it was designed to do, and Peep handles its own internal mixing, which
+    makes sense from a project management point of view.
+
+
+Reason for revamping the mixing datastructure
+
+  A lot of the mixing datastructures were defined originally while
+  prototyping the mixer, and then were used to create the first public
+  version. However, not that the mixer code has matured a little, the
+  structure of its internals have become more apparent. In addition, some
+  work was done for the 0.4.1 release on creating an API for querying and
+  interacting with the mixer.
+
+  However, code organization would benefit greatly by moving the mixer
+  datastructures, currently in the form of arrays, into a well defined
+  struct. In their current form, these datastructures are very unclear.
+
+  In addition, I would like to make the real-time sound processing effects
+  more modular so that it will be easier to expand the capabilities of the
+  mixer in the future. Hopefully, this proposal will also include some new
+  real-time effects as well (pitch-bending comes to mind).
+
+Mixer datastructures revisited
+
+  The mixer provides internal support for two kinds of sound mixing:
+
+    1) Event mixing: which is regular sample mixing
+
+    2) State mixing: which is continuous background sounds that are
+                     mixed in a random order.
+
+  For event mixing, the mixer maintains the following datastructures:
+
+    short **Sound_Bufs;
+    unsigned int *Buf_Length;
+    unsigned char *Stereo_Left;
+    unsigned int *Sound_Pos;
+
+  These can be combined into a single event buffer descriptor:
+
+    typedef struct {
+      short *snd_buf;     /* Array of sound data */
+      unsigned int len;   /* Length of data */
+      unsigned int pos;   /* Current position ptr */
+      double stereo_pos;  /* Stereo position of data */
+    } EVENT_BUF;
+
+  Where the sound buffers are allocated as an array within the mixer:
+
+    static EVENT_BUF *ebuffs;
+    static unsigned int no_ebuffs;
+
+  For state mixing, the mixer maintains the following datastructures:
+
+    short ***State_Sounds;
+    unsigned int *Snds_Per_State;
+    unsigned int **State_Snd_Length;
+    double *State_Volume;
+    unsigned char *State_Stereo;
+    unsigned int *Cur_Snd;
+    unsigned int *Cur_Snd_Pos;
+
+  These can be combined into a single state descriptor:
+
+    typedef struct {
+      short **snd_buf;        /* Array of state segments */
+      unsigned int *len;      /* segment lengths */
+      unsigned int snd_count; /* number of snds per state */
+      unsigned int snd_no;    /* current segment to look at */
+      unsigned int pos;       /* position in that segment */
+      double vol;             /* volume */
+      double stereo_pos;      /* stereo */
+    } STATE_BUF;
+
+  Where the sound buffers are allocated as an array within the mixer:
+
+    static STATE_BUF *sbuffs;
+    static unsigned int no_sbuffs;
+
+Sound Module API
+
+  The sound module API won't really change, unless when adding support for
+  EsounD, we discover that the API is inadequate.
+
+    int *soundInit (void *card, int device, int mode);
+    int soundSetFormat (void *handle, unsigned int type,
+                        unsigned int rate, unsigned int chans,
+                        unsigned int port);
+    struct sound_card_info *soundGetInfo (void *handle);
+    struct sound_status *soundGetStatus (void *handle);
+    ssize_t soundPlayChunk (void *handle, char *buf, unsigned int len);
+    int soundClose (void *handle);
+
+  Some of the functions, such as soundGetInfo and soundGetStatus aren't used
+  by the mixer but may be used by future versions for querying information
+  about the soundcard and its buffers.
+
+Adding New Sound Formats
+
+  The current support sound format is raw, signed 16-bit, little endian,
+  44100 kHz, stereo. While sox could be used to convert the sounds, it might
+  be nice to add support for different sound types. However, this should be
+  done at load time. The mixer will still continue to only support those
+  sound types internally.
+
+  Support plans for other file types include:
+
+    * WAV
+    * MP3..?

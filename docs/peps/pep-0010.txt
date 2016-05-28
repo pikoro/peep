@@ -1,0 +1,160 @@
+PEP: 0010
+Title: Themes
+Version: $Revision; 1.1$
+Author: collin.starkweather@colorado.edu (Collin Starkweather),
+        eyez@babblica.net (Rando Christensen),
+        mgilfix@eecs.tufts.edu (Michael Gilfix)
+Status: Draft
+Type: Standards
+Created: May 18th, 2001
+Post-history: May 18th, 2001
+
+Abstract
+
+   The motivation behind themes in Peep comes from the efforts of
+   Rando Christensen, the author of Logplay, a monitoring tool similar
+   to Peep which made effective use of sound themes.
+
+   The primary idea is to group sounds into themes, such as a jungle
+   theme, songbird theme, or city-scape theme.
+
+   Then various clients can be assigned a theme instead of a specific
+   sound. The advantages of themed sound schemes include:
+
+    1. Ease of use. Users will be able to use "out of the box" sound
+    combinations.
+
+    2. Easy aural differentiation between clients which may reside on
+    differing servers, yet which monitor the same functions.
+
+    3. An enhanced user community. Users will be able to create their
+    own themes to suit their personal preferences and exchange the
+    themes they create.
+
+   I should emphasize that this document is a living document, and that
+   changes and suggestions will be incorporated as they are made.
+
+Preamble
+
+   The specification criteria of this document include:
+
+    1. Fully specify any document definitions or data structures, such as
+       XML, DTD, or XSD documents.
+    2. Fully specify the architecture of any new features and additions
+       to the code base.
+    3. Outline in as much detail is practicable any changes that will be
+       made to the existing code base.
+
+   The specification should rightfully begin with some developer
+   comments to set the stage:
+
+   Andy offered a warning:
+
+      A lot of effort has been put into making Peep as flexible as
+      possible.  It'd be a shame for all that effort to be hidden by
+      so much pre-config.
+
+      Let's try to keep what Peep can do separate from what it
+      actually does.  Peep is a network-based client-server sound
+      mixer and player.  This is a definition that has wide appeal.
+      When you start moving the project in the direction of a logfile
+      player (eg. logplay), you start to lose sight of the strength of
+      the software: its abstract nature.
+
+   Rando offered in return his observations based on his experience with
+   Logplay:
+
+      I watched my logplay go from being well-used and a thing of
+      interest to something almost nobody wants to use or even cares
+      about anymore. There was some mistakes I made in it's
+      development (which will be fixed on my own, later) that I think
+      Peep could do differently. One of these mistakes was assuming
+      that my users would have no problem with Regular
+      Expressions. They scare a lot of people, and they don't want to
+      come up with a lot of Regex's just to see a working example of
+      the program. if it doesn't work right, a lot of people give up
+      on the project right there.
+
+   I think both points are valid. It is important not to lose the ability
+   to abstract with Peep; that is, whatever we provide the user in terms
+   of automatic configuration must not decrease the user's ability to
+   configure or use Peep as they like.
+
+   Recently, several new clients have been added or prototyped and the
+   new client architecture makes it easier than ever to create customized
+   clients. As Peep develops, it should be moving towards providing users
+   an expanding set of possibilities. We are, after all, Unix users and
+   developers writing a tool for system administrators who should
+   theoretically have more than a few brain cells to rub together.
+
+   Likewise, as Peep increases in complexity, with more sounds available,
+   more clients, and more robust monitoring possibilities, users will
+   need to have ways to make their decision-making processes simpler.
+
+Specification
+
+   The driving abstraction between themes is that of sets and subsets. A
+   theme is simply a set of sounds to be used for a common purpose.
+
+   To derive the correct abstraction of the set, we must examine what the
+   common purpose of the themes is to be.
+
+   The way I see it, themes
+
+    1. Provide a way to assign a group of events or states to a set of
+       sounds that are complementary.
+    2. Provides a "pre-fab" set of events and sounds that a user can
+       use rather than creating their own combinations.[42]8
+    3. Provides users ways to trade sound/event/state combinations
+       easily.
+
+   Note that the specification of the themes described below is
+   dependent upon many of the concepts described in the Sound
+   Repository and General Peep Configuration PEP (pep-0011.txt),
+   specifically the definition of sounds, events, states, etc. through
+   their own XML documents.
+
+   themes.xml
+   ----------
+
+   Primarily, a theme is simply an association between the set of events
+   and states and the set of sounds.
+
+   Note that this example relies on descriptors associated with
+   sounds, events, and states.  See pep-0011.txt for more information.
+
+   <?xml version='1.0' encoding='UTF-8'>
+
+   <theme>
+      <name>Application Server Theme</name>
+      <description>
+         Theme for application servers.  Includes sounds for testing for
+         running Apache processes and HTTP requests.
+      </description>
+      <event>
+         <name>out-sendmail</name>
+         <sound>Redwing Blackbird 1</sound>
+      </event>
+      <event>
+         <name>inc-sendmail</name>
+         <sound>Light Hoot 1</sound>
+      </event>
+      <!-- etc. ... -->
+      <state>
+         <name>Load</name>
+         <sounds>Leaves</sounds>
+      </state>
+      <!-- etc. ... -->
+   </theme>
+
+See Also
+
+   The Sound Repository and General Peep Configuration PEP
+   (pep-0011.txt)
+
+Copyright
+
+  Issued under the Gnu General Public License.
+
+  Michael Gilfix <mgilfix@eecs.tufts.edu> Copyright (C) 2001
+

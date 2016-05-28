@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<TITLE>peck</TITLE>
+<LINK REV="made" HREF="mailto:prospector@porky.devel.redhat.com">
+</HEAD>
+
+<BODY>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;peck</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI>
+	<LI><A HREF="#usage">USAGE</A></LI>
+	<LI><A HREF="#commandline arguments">COMMAND-LINE ARGUMENTS</A></LI>
+	<LI><A HREF="#examples">EXAMPLES</A></LI>
+	<LI><A HREF="#alternatives">ALTERNATIVES</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+	<LI><A HREF="#see also">SEE ALSO</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>peck - Ad-hoc sound generator for Peep:  The Network Auralizer.</P>
+<P>
+<HR>
+<H1><A NAME="usage">USAGE</A></H1>
+<PRE>
+  peck --server=$SERVER --port=$PORT [OPTIONS]</PRE>
+<P>
+<HR>
+<H1><A NAME="commandline arguments">COMMAND-LINE ARGUMENTS</A></H1>
+<P>Command-line arguments processed by peck include:</P>
+<PRE>
+    --type      The type of sound to produce (e.g., event=0, state=1)
+    --sound     The name or number of the sound to produce
+    --location  The location (left or right speaker) of the sound
+    --volume    The volume of the sound
+    --priority  A priority for producing the sound
+    --dither    The dither
+    --port      The port to which the event will be directed
+    --server    The server to which the event will be directed
+    --debug     The debugging level (Def:  0)
+    --logfile   The file to send log output (Def:  STDOUT)
+    --help      Prints whatever PODs are found in the calling 
+                application</PRE>
+<P>
+<HR>
+<H1><A NAME="examples">EXAMPLES</A></H1>
+<PRE>
+  peck --server=localhost --port=2001 --type=0 --sound=1</PRE>
+<PRE>
+  peck --server=localhost --port=2001 --type=1 --sound=1</PRE>
+<P>
+<HR>
+<H1><A NAME="alternatives">ALTERNATIVES</A></H1>
+<P>For information on how to sample individual sounds in the Peep sound
+repository, see the Net::Peep::Peck documentation.</P>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>Michael Gilfix &lt;<A HREF="mailto:mgilfix@eecs.tufts.edu">mgilfix@eecs.tufts.edu</A>&gt; Copyright (C) 2001</P>
+<P>Collin Starkweather &lt;<A HREF="mailto:collin.starkweather@collinstarkweather.com">collin.starkweather@collinstarkweather.com</A>&gt;</P>
+<P>
+<HR>
+<H1><A NAME="see also">SEE ALSO</A></H1>
+<P>perl(1), Net::Peep::Peck</P>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;peck</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+</BODY>
+
+</HTML>
